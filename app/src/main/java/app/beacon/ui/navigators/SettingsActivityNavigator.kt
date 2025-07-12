@@ -1,26 +1,25 @@
 package app.beacon.ui.navigators
 
-import android.R.attr.navigationIcon
+import android.R.attr.name
+import android.content.Context
 import androidx.activity.compose.LocalActivity
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.LargeTopAppBar
 import androidx.compose.material3.MediumTopAppBar
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.painter.Painter
-import androidx.compose.ui.graphics.vector.VectorPainter
-import androidx.compose.ui.graphics.vector.addPathNodes
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
@@ -30,33 +29,39 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import app.beacon.ui.layouts.HomeLayout
-import app.beacon.ui.layouts.ScanLayout
-import app.beacon.ui.layouts.settings.SettingsLayout
-import app.beacon.ui.theme.BeaconTheme
+import androidx.navigation.internal.NavContext
+import app.beacon.R
+import app.beacon.ui.layouts.settings.DebugLayout
+import app.beacon.ui.layouts.settings.MainLayout
 import app.beacon.ui.theme.LilyScriptOneRegular
-import app.beacon.ui.theme.NiconneRegular
 import app.beacon.ui.theme.Typography
-import java.io.StringReader
+
+
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable fun SettingsActivityNavigator() {
     val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior(rememberTopAppBarState())
     val navHostController = rememberNavController()
     val activity = LocalActivity.current
+    val navBackStackEntry by navHostController.currentBackStackEntryAsState()
+    val currentRoute = navBackStackEntry?.destination?.route
+    val currentValue = MainLayout.entries.find { it.name == currentRoute } ?: MainLayout.Settings
+
+    // var currentValue  by remember {  mutableStateOf<MainLayout>(MainLayout.Settings) }
     Scaffold(
         modifier = Modifier.fillMaxSize(),
         topBar = {
             MediumTopAppBar(
                 title = {
                     Text(
-                        text = stringResource(id = app.beacon.R.string.title_settings),
+                        text = currentValue.name,
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis,
                         fontSize = Typography.displayMedium.fontSize,
                         style = TextStyle(
-                            fontFamily = LilyScriptOneRegular
+                            fontFamily = FontFamily.Default
                         ),
                         modifier = Modifier.padding(vertical = 8.dp)
                     )
@@ -64,7 +69,9 @@ import java.io.StringReader
                 navigationIcon = {
                     IconButton(
                         onClick = {
-                            activity?.finish()
+                            if (!navHostController.popBackStack()) {
+                                activity?.finish()
+                            }
                         },
                         shape = RoundedCornerShape(25)
                     ) {
@@ -82,9 +89,12 @@ import java.io.StringReader
         }
     ) { innerPadding ->
 //        HomeLayout(innerPadding)
-        NavHost(navController = navHostController, startDestination = "home" , modifier = Modifier.padding(innerPadding)) {
-            composable("home") {
-                SettingsLayout()
+        NavHost(navController = navHostController, startDestination = MainLayout.Settings.name , modifier = Modifier.padding(innerPadding)) {
+            composable(MainLayout.Settings.name) {
+                MainLayout.Compose(currentValue, navHostController)
+            }
+            composable(MainLayout.Debug.name) {
+                DebugLayout()
             }
         }
     }

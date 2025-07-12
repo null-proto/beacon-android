@@ -19,9 +19,20 @@
             android:theme="@style/Theme.Beacon">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+        </activity>
+
+        <activity android:name=".activities.DiscoveryActivity"
+            android:theme="@style/Theme.Beacon"
+            android:exported="false"
+            >
+        </activity>
+
+        <activity android:name=".activities.SettingsActivity"
+            android:theme="@style/Theme.Beacon"
+            android:exported="false"
+            >
         </activity>
 
         <service android:name=".services.Daemon"

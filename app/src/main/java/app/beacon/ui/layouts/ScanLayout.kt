@@ -1,6 +1,7 @@
 package app.beacon.ui.layouts
 
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
@@ -12,6 +13,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import app.beacon.ui.components.DeviceItem
 import app.beacon.ui.components.SettingsItem
 
 @Preview
@@ -20,16 +22,18 @@ import app.beacon.ui.components.SettingsItem
         modifier = Modifier.padding(paddingValues)
             .fillMaxSize()
     ) {
-        LinearProgressIndicator(
-            modifier = Modifier.fillMaxWidth()
-        )
+        Column {
+            LinearProgressIndicator(
+                modifier = Modifier.fillMaxWidth()
+            )
 
-        // de level
-        LazyColumn(
-            modifier = Modifier.fillMaxSize()
-        ) {
-            items((1..30).toList()) {
-                SettingsItem()
+            LazyColumn(
+                modifier = Modifier.fillMaxSize()
+                    .padding(top=8.dp)
+            ) {
+                items((1..30).toList()) {
+                    DeviceItem()
+                }
             }
         }
     }

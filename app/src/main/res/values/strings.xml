@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">Beacon</string>
+<!--  layout/fragment title and sub heading  -->
+    <string name="title_settings">Settings</string>
 </resources>

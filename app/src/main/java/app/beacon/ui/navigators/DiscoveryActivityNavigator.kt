@@ -2,6 +2,7 @@ package app.beacon.ui.navigators
 
 import android.R.attr.navigationIcon
 import android.content.Intent
+import androidx.activity.compose.LocalActivity
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -32,7 +33,6 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import app.beacon.activities.DiscoveryActivity
 import app.beacon.activities.SettingsActivity
 import app.beacon.ui.layouts.HomeLayout
 import app.beacon.ui.layouts.ScanLayout
@@ -44,10 +44,11 @@ import java.io.StringReader
 import kotlin.jvm.java
 
 @OptIn(ExperimentalMaterial3Api::class)
-@Composable fun MainActivityNavigator() {
+@Composable fun DiscoveryActivityNavigator() {
     val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior(rememberTopAppBarState())
     val navHostController = rememberNavController()
     val context = LocalContext.current
+    val activity = LocalActivity.current
 
     Scaffold(
         modifier = Modifier.fillMaxSize(),
@@ -55,7 +56,8 @@ import kotlin.jvm.java
             MediumTopAppBar(
                 title = {
                     Text(
-                        text = stringResource(id = app.beacon.R.string.app_name),
+//                        text = stringResource(id = app.beacon.R.string.app_name),
+                        text = "Discovery",
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis,
                         fontSize = Typography.displayMedium.fontSize,
@@ -67,12 +69,14 @@ import kotlin.jvm.java
                 },
                 navigationIcon = {
                     IconButton(
-                        onClick = {},
+                        onClick = {
+                            activity?.finish()
+                        },
                         shape = RoundedCornerShape(25)
                     ) {
                         Icon(
                             painter = painterResource(
-                                app.beacon.R.drawable.chart_no_axes_gantt
+                                app.beacon.R.drawable.chevron_left
                             ),
                             contentDescription = null
                         )
@@ -81,26 +85,13 @@ import kotlin.jvm.java
                 actions = {
                     IconButton(
                         onClick = {
-                            val discoveryIntent = Intent(context, DiscoveryActivity::class.java)
-                            context.startActivity(discoveryIntent)
-                        }
-                    ) {
-                        Icon(
-                            painter = painterResource(
-                                app.beacon.R.drawable.radar
-                            ),
-                            contentDescription = null
-                        )
-                    }
-                    IconButton(
-                        onClick = {
                             val settingsIntent = Intent(context,SettingsActivity::class.java)
                             context.startActivity(settingsIntent)
                         }
                     ) {
                         Icon(
                             painter = painterResource(
-                                app.beacon.R.drawable.settings
+                                app.beacon.R.drawable.settings2
                             ),
                             contentDescription = null
                         )
@@ -110,11 +101,6 @@ import kotlin.jvm.java
             )
         }
     ) { innerPadding ->
-//        HomeLayout(innerPadding)
-        NavHost(navController = navHostController, startDestination = "home" , modifier = Modifier.padding(innerPadding)) {
-            composable("home") {
-                HomeLayout()
-            }
-        }
+        ScanLayout(paddingValues = innerPadding)
     }
 }

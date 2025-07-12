@@ -1,7 +1,7 @@
 package app.beacon.ui.navigators
 
 import android.R.attr.navigationIcon
-import android.content.Intent
+import androidx.activity.compose.LocalActivity
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -21,7 +21,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.graphics.vector.VectorPainter
 import androidx.compose.ui.graphics.vector.addPathNodes
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
@@ -32,30 +31,27 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import app.beacon.activities.DiscoveryActivity
-import app.beacon.activities.SettingsActivity
 import app.beacon.ui.layouts.HomeLayout
 import app.beacon.ui.layouts.ScanLayout
+import app.beacon.ui.layouts.settings.SettingsLayout
 import app.beacon.ui.theme.BeaconTheme
 import app.beacon.ui.theme.LilyScriptOneRegular
 import app.beacon.ui.theme.NiconneRegular
 import app.beacon.ui.theme.Typography
 import java.io.StringReader
-import kotlin.jvm.java
 
 @OptIn(ExperimentalMaterial3Api::class)
-@Composable fun MainActivityNavigator() {
+@Composable fun SettingsActivityNavigator() {
     val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior(rememberTopAppBarState())
     val navHostController = rememberNavController()
-    val context = LocalContext.current
-
+    val activity = LocalActivity.current
     Scaffold(
         modifier = Modifier.fillMaxSize(),
         topBar = {
             MediumTopAppBar(
                 title = {
                     Text(
-                        text = stringResource(id = app.beacon.R.string.app_name),
+                        text = stringResource(id = app.beacon.R.string.title_settings),
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis,
                         fontSize = Typography.displayMedium.fontSize,
@@ -67,45 +63,20 @@ import kotlin.jvm.java
                 },
                 navigationIcon = {
                     IconButton(
-                        onClick = {},
+                        onClick = {
+                            activity?.finish()
+                        },
                         shape = RoundedCornerShape(25)
                     ) {
                         Icon(
                             painter = painterResource(
-                                app.beacon.R.drawable.chart_no_axes_gantt
+                                app.beacon.R.drawable.chevron_left
                             ),
                             contentDescription = null
                         )
                     }
                 },
-                actions = {
-                    IconButton(
-                        onClick = {
-                            val discoveryIntent = Intent(context, DiscoveryActivity::class.java)
-                            context.startActivity(discoveryIntent)
-                        }
-                    ) {
-                        Icon(
-                            painter = painterResource(
-                                app.beacon.R.drawable.radar
-                            ),
-                            contentDescription = null
-                        )
-                    }
-                    IconButton(
-                        onClick = {
-                            val settingsIntent = Intent(context,SettingsActivity::class.java)
-                            context.startActivity(settingsIntent)
-                        }
-                    ) {
-                        Icon(
-                            painter = painterResource(
-                                app.beacon.R.drawable.settings
-                            ),
-                            contentDescription = null
-                        )
-                    }
-                },
+                actions = { },
                 scrollBehavior = null
             )
         }
@@ -113,7 +84,7 @@ import kotlin.jvm.java
 //        HomeLayout(innerPadding)
         NavHost(navController = navHostController, startDestination = "home" , modifier = Modifier.padding(innerPadding)) {
             composable("home") {
-                HomeLayout()
+                SettingsLayout()
             }
         }
     }

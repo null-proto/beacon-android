@@ -1,5 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-
-    <style name="Theme.Beacon" parent="android:Theme.Material.Light.NoActionBar" />
+    <style name="Theme.Beacon" parent="android:Theme.Material.Light.NoActionBar" >
+<!--        <item name="android:windowSplashScreenAnimatedIcon">@null</item>-->
+<!--        <item name="android:windowSplashScreenAnimationDuration">@android:integer/config_shortAnimTime</item>-->
+<!--        <item name="android:windowSplashScreenIconBackgroundColor">@color/black</item>-->
+<!--        <item name="android:windowSplashScreenBackground">@color/black</item>-->
+<!--        <item name="android:windowSplashScreenBehavior">@android:integer/status_bar_notification_info_maxnum</item>-->
+    </style>
 </resources>

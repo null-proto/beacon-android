@@ -1,5 +1,7 @@
 package app.beacon.ui.components
 
+import android.R.attr.description
+import android.R.attr.name
 import androidx.annotation.DrawableRes
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -34,9 +36,11 @@ import app.beacon.ui.theme.Typography
     name : String = "Sample Settings",
     description : String = "A detailed description for sample settings",
     paddingValues: PaddingValues = PaddingValues(0.dp),
-    @DrawableRes id : Int = app.beacon.R.drawable.settings
+    @DrawableRes id : Int = app.beacon.R.drawable.settings,
+    onClick : ()->Unit = {}
 ) {
     Surface(
+        onClick = onClick,
         modifier = Modifier.padding(paddingValues)
             .fillMaxWidth()
     ) {

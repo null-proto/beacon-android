@@ -27,9 +27,11 @@ import app.beacon.ui.theme.Typography
     name : String = "No device",
     ipAddress : String = "127.0.0.1",
     type : Device.IntoDevice = Device.DeviceType.Unknown,
-    paddingValues: PaddingValues = PaddingValues(0.dp)
+    paddingValues: PaddingValues = PaddingValues(0.dp),
+    onClick:()->Unit = {}
 ) {
     Surface(
+        onClick = onClick,
         modifier = Modifier.padding(paddingValues)
             .fillMaxWidth()
     ) {

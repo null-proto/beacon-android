@@ -26,7 +26,7 @@ import app.beacon.ui.theme.Typography
 @Composable fun DeviceItem(
     name : String = "No device",
     ipAddress : String = "127.0.0.1",
-    type : Device.IntoDevice = Device.DeviceType.Unknown,
+    type : Device.IntoDeviceType = Device.DeviceType.Unknown,
     paddingValues: PaddingValues = PaddingValues(0.dp),
     onClick:()->Unit = {}
 ) {

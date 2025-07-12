@@ -1,17 +1,22 @@
 package app.beacon.core
 
-import android.R.attr.data
-import androidx.annotation.DrawableRes
 import app.beacon.R.drawable
+import app.beacon.core.helpers.Serde
+import org.json.JSONObject
 
 class Device {
-    interface IntoDevice {
+    interface IntoDeviceType : Serde {
         fun getIcon() : Int
-        fun deserialize(data: Int) : IntoDevice
-        fun serialize(): Int
     }
 
-    enum class DeviceType: IntoDevice {
+    interface IntoDeviceInfo : Serde {
+        val name : String
+        val type : DeviceType
+        val ipAddress : String
+        val hostname : String
+    }
+
+    enum class DeviceType: IntoDeviceType {
         Laptop,
         Desktop,
         Mobile,
@@ -42,25 +47,90 @@ class Device {
             }
         }
 
-        override fun deserialize(data: Int): IntoDevice {
-            return when(data) {
-                1 -> Laptop
-                2 -> Desktop
-                3 -> Mobile
-                4 -> Tv
-                5 -> Tablet
-                else -> Unknown
-            }
+        override fun serialize(): ByteArray {
+            return byteArrayOf(when(this) {
+                Laptop ->  0x1
+                Desktop -> 0x2
+                Mobile ->  0x3
+                Tv ->      0x4
+                Tablet ->  0x5
+                Unknown -> 0x6
+            })
         }
 
-        override fun serialize(): Int {
-            return when(this) {
-                Laptop -> 1
-                Desktop -> 2
-                Mobile -> 3
-                Tv -> 4
-                Tablet -> 5
-                Unknown -> 6
+        companion object {
+            @JvmStatic
+            fun deserialize(data: ByteArray): DeviceType {
+                return when (data[0]) {
+                    0x1.toByte() -> Laptop
+                    0x2.toByte() -> Desktop
+                    0x3.toByte() -> Mobile
+                    0x4.toByte() -> Tv
+                    0x5.toByte() -> Tablet
+                    else -> Unknown
+                }
+            }
+        }
+    }
+
+    data class DeviceInfo(
+        override val name: String,
+        override val type : DeviceType,
+        override val ipAddress : String,
+        override val hostname : String
+    ) : IntoDeviceInfo {
+        override fun serialize(): ByteArray {
+            return JSONObject().apply {
+                put("name", name)
+                put("type", type)
+                put("ipAddress", ipAddress)
+                put("hostname", hostname)
+            }.toString().toByteArray(Charsets.UTF_8)
+        }
+
+
+        companion object {
+            @JvmStatic
+            fun deserialize(data: ByteArray): DeviceInfo {
+                JSONObject(data.slice(1..-1).toByteArray().toString(Charsets.UTF_8)).apply {
+                    return DeviceInfo(
+                        getString("name"),
+                        DeviceType.deserialize(byteArrayOf(data[0])),
+                        getString("ipAddress"),
+                        getString("hostname")
+                    )
+                }
+            }
+        }
+    }
+
+    data class DeviceFullInfo(
+        override val name: String,
+        override val type : DeviceType,
+        override val ipAddress : String,
+        override val hostname : String
+    ) : IntoDeviceInfo {
+
+        override fun serialize(): ByteArray {
+            return JSONObject().apply {
+                put("name", name)
+                put("type", type)
+                put("ipAddress", ipAddress)
+                put("hostname", hostname)
+            }.toString().toByteArray(Charsets.UTF_8)
+        }
+
+        companion object {
+            @JvmStatic
+            fun deserialize(data: ByteArray): DeviceFullInfo {
+                JSONObject(data.slice(1..-1).toByteArray().toString(Charsets.UTF_8)).apply {
+                    return DeviceFullInfo(
+                        getString("name"),
+                        DeviceType.deserialize(byteArrayOf(data[0])),
+                        getString("ipAddress"),
+                        getString("hostname")
+                    )
+                }
             }
         }
     }

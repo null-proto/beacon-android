@@ -35,6 +35,11 @@
             >
         </activity>
 
+        <activity android:name=".activities.ControlTabActivity"
+            android:theme="@style/Theme.Beacon"
+            android:exported="false">
+        </activity>
+
         <service android:name=".services.Daemon"
             android:exported="false"
             android:foregroundServiceType="dataSync"

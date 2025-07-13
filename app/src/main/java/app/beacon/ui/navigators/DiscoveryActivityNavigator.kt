@@ -60,7 +60,7 @@ import kotlin.jvm.java
                         text = "Discovery",
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis,
-                        fontSize = Typography.displayMedium.fontSize,
+                        fontSize = Typography.displaySmall.fontSize,
                         style = TextStyle(
                             fontFamily = LilyScriptOneRegular
                         ),

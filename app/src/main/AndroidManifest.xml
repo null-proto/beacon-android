@@ -46,6 +46,13 @@
             android:permission="android.permission.FOREGROUND_SERVICE"
             />
 
+        <receiver android:name=".services.Broadcasts"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MY_PACKAGE_REPLACED"/>
+            </intent-filter>
+        </receiver>
+
     </application>
 
     <queries>

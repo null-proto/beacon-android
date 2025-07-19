@@ -5,10 +5,12 @@ import android.content.ComponentName
 import android.content.Intent
 import android.os.IBinder
 import android.util.Log
+import app.beacon.core.state.Objects
 
 class Daemon: Service() {
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         Log.i("Services:Daemon:onStartCommand","start")
+        Objects.isDaemonRunning = true
         return START_STICKY
     }
 

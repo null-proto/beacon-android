@@ -1,5 +1,6 @@
 package app.beacon.activities
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -15,16 +16,23 @@ import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import app.beacon.core.state.Objects
+import app.beacon.services.Daemon
 import app.beacon.ui.navigators.MainActivityNavigator
 import app.beacon.ui.navigators.MainActivityNavigator
 import app.beacon.ui.theme.BeaconTheme
 
 class MainActivity : ComponentActivity() {
+    fun startDaemon() {
+        if (!Objects.isDaemonRunning)
+            this.startService(Intent(this, Daemon::class.java))
+    }
+
     @OptIn(ExperimentalMaterial3Api::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
-
+        startDaemon()
 
         setContent {
             BeaconTheme {

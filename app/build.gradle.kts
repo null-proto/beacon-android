@@ -39,6 +39,17 @@ android {
     }
 }
 
+tasks.register("printCpath") {
+  doLast {
+    val cp = configurations
+      .named("debugRuntimeClasspath")
+      .get()
+      .resolve()
+      .joinToString(":") { it.absolutePath }
+    println(cp)
+  }
+}
+
 dependencies {
     implementation(libs.androidx.material3)
     implementation(libs.androidx.navigation.compose)

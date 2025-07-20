@@ -33,3 +33,8 @@ debug: build-debug move-artifact
 
 debug-zip:
 	cd artifacts/android-root && zip artifacts/app.beacon.debug-build.zip -r9 .
+
+generate-kls:
+	@echo "Generating kls-classpath"
+	@./gradlew :app:printCpath --quiet 2>/dev/null | sed 's/:$$//' > kls-classpath
+	@echo "Done."

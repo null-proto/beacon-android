@@ -15,3 +15,5 @@
 .idea
 local.properties
 /artifacts/
+/kls-classpath
+/kls_database.db

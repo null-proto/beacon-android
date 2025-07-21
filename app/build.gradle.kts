@@ -50,6 +50,57 @@ tasks.register("printCpath") {
   }
 }
 
+tasks.register("extractJarsFromAars") {
+  doLast {
+    val cp = configurations.named("debugRuntimeClasspath").get().resolve()
+    val outputDir = file("$buildDir/extracted-jars")
+    outputDir.mkdirs()
+
+    val extractedPaths = cp
+      .filter { it.name.endsWith(".aar") }
+      .map { aar ->
+        val jarPath = outputDir.resolve(aar.name.removeSuffix(".aar") + ".jar")
+        val classJar = zipTree(aar).matching { include("classes.jar") }.singleFile
+        classJar.copyTo(jarPath, overwrite = true)
+        jarPath.absolutePath
+      }
+
+    println(extractedPaths.joinToString(":"))
+  }
+}
+
+tasks.register("printExtractedJarPaths") {
+  doLast {
+    val cp = configurations.named("debugRuntimeClasspath").get().resolve()
+    val outputDir = file("$buildDir/extracted-jars")
+    outputDir.mkdirs()
+
+    val extracted = cp
+      .filter { it.name.endsWith(".aar") }
+      .map { aar ->
+        val outJar = outputDir.resolve(aar.name.removeSuffix(".aar") + ".jar")
+        val classesJar = zipTree(aar).matching { include("classes.jar") }.singleFile
+        classesJar.copyTo(outJar, overwrite = true)
+        outJar.absolutePath
+      }
+
+    println(extracted.joinToString(":"))
+  }
+}
+
+tasks.register("printJarPathsOnly") {
+  doLast {
+    val cp = configurations.named("debugRuntimeClasspath").get().resolve()
+    val jarPaths = cp.filter { it.name.endsWith(".jar") }
+      .map { it.absolutePath }
+
+    println(jarPaths.joinToString(":"))
+  }
+}
+
+
+
+
 dependencies {
     implementation(libs.androidx.material3)
     implementation(libs.androidx.navigation.compose)

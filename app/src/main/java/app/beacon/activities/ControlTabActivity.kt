@@ -10,16 +10,10 @@ import app.beacon.ui.theme.BeaconTheme
 
 
 class ControlTabActivity : ComponentActivity() {
-    @OptIn(ExperimentalMaterial3Api::class)
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
-
-
-        setContent {
-            BeaconTheme {
-                MainActivityNavigator()
-            }
-        }
-    }
+  @OptIn(ExperimentalMaterial3Api::class)
+  override fun onCreate(savedInstanceState: Bundle?) {
+    super.onCreate(savedInstanceState)
+    enableEdgeToEdge()
+    setContent { BeaconTheme { MainActivityNavigator() } }
+  }
 }

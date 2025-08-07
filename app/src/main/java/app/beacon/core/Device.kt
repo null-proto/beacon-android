@@ -12,7 +12,6 @@ class Device {
     interface IntoDeviceInfo : Serde {
         val name : String
         val type : DeviceType
-        val ipAddress : String
         val hostname : String
     }
 
@@ -73,17 +72,15 @@ class Device {
         }
     }
 
-    data class DeviceInfo(
+    data class DevicePublicInfo(
         override val name: String,
         override val type : DeviceType,
-        override val ipAddress : String,
         override val hostname : String
     ) : IntoDeviceInfo {
         override fun serialize(): ByteArray {
             return JSONObject().apply {
                 put("name", name)
                 put("type", type)
-                put("ipAddress", ipAddress)
                 put("hostname", hostname)
             }.toString().toByteArray(Charsets.UTF_8)
         }
@@ -91,12 +88,11 @@ class Device {
 
         companion object {
             @JvmStatic
-            fun deserialize(data: ByteArray): DeviceInfo {
+            fun deserialize(data: ByteArray): DevicePublicInfo {
                 JSONObject(data.slice(1..-1).toByteArray().toString(Charsets.UTF_8)).apply {
-                    return DeviceInfo(
+                    return DevicePublicInfo(
                         getString("name"),
                         DeviceType.deserialize(byteArrayOf(data[0])),
-                        getString("ipAddress"),
                         getString("hostname")
                     )
                 }
@@ -107,7 +103,6 @@ class Device {
     data class DeviceFullInfo(
         override val name: String,
         override val type : DeviceType,
-        override val ipAddress : String,
         override val hostname : String
     ) : IntoDeviceInfo {
 
@@ -115,7 +110,6 @@ class Device {
             return JSONObject().apply {
                 put("name", name)
                 put("type", type)
-                put("ipAddress", ipAddress)
                 put("hostname", hostname)
             }.toString().toByteArray(Charsets.UTF_8)
         }
@@ -127,7 +121,6 @@ class Device {
                     return DeviceFullInfo(
                         getString("name"),
                         DeviceType.deserialize(byteArrayOf(data[0])),
-                        getString("ipAddress"),
                         getString("hostname")
                     )
                 }

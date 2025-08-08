@@ -8,11 +8,11 @@
 | 24 Bytes + Variable(metadata) | Variable |
 
 ### Header
-The Header is designed to be fixed length (16 Bytes) with 7 segments which includes auth and integrity checks
+The Header is designed to be fixed length (24 Bytes) with 10 segments which includes auth and integrity checks
 
-| version | flags  |  type  | payload_id | payload_length | metadata_length | metadata_type  | reserved | checksum |  Metadata  |
-|:-------:|:------:|:------:|:----------:|:--------------:|:---------------:|:--------------:|:--------:|:--------:|:----------:|
-| 1 Byte  | 1 Byte | 1 Byte |  2 Bytes   |    4 Bytes     |     2 Bytes     |     1 Byte     | 8 Bytes  | 4 Bytes  |    var     |
+| version | flags  |  type  | payload_id | payload_length | metadata_length | metadata_type  | reserved | checksum | Metadata |
+|:-------:|:------:|:------:|:----------:|:--------------:|:---------------:|:--------------:|:--------:|:--------:|:--------:|
+| 1 Byte  | 1 Byte | 1 Byte |  2 Bytes   |    4 Bytes     |     2 Bytes     |     1 Byte     | 8 Bytes  | 4 Bytes  | variable |
 
 #### Version
 A version byte defines protocol version starts with `1` refers to `v1`.There is only one version currently available.
@@ -48,11 +48,25 @@ Payload length is 3 bytes fixed length. It can carry `16 Mega Bytes`.
 > ##### why 3 bytes
 > Well, 4 bytes can hold up to `4 GB` which is humongous for network operations.`2 Bytes (16KB)` is too short to transfer files.So,`3 Bytes (16MB)` seems to more efficient with chunking and it can transfer `65536 chunks * 16MB = 1.048 Terra Byte or 1048 GB` size of data.
 
-#### Authentication Bytes
-Authentication Bytes are fixed 32bit or 4 byte value uniquely distributed/generated. **It is blank at this time**
+#### metadata_length
+Determines overall length of metadata, 1 = Byte or 8-bit
+
+#### metadata_type
+Type of the metadata, with is used to parse metadata into objects
+
+| code | type      |
+|:----:|:----------|
+|  0   | Undefined |
+|  1   | Json      |
+
+#### Reserved
+These are reserved for future use.today, just fill with `0`
 
 #### Checksum
-Checksum is also 32bt or 4byte fixed length value.There is a plan to use CRC32,or FNV-1a(32bit),or xxHash32
+Checksum is also 32bt or 4byte fixed length value.There is a plan to use CRC32,or FNV-1a(32bit),or xxHash32 . Checksum verifies before metadata decode.
+
+#### Metadata
+Metadata is used for send special messages like auth-coed,session-code,encoding,...etc
 
 ### Payload
 Payload is added up with header, It doesn't contains any magic/identification segments inside.

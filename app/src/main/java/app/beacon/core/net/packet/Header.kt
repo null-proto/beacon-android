@@ -1,5 +1,6 @@
 package app.beacon.core.net.packet
 
+import android.R.attr.type
 import android.util.Log
 import app.beacon.core.helpers.Serde
 import kotlin.experimental.and
@@ -154,15 +155,14 @@ class Header(var data : ByteArray) : Serde {
             flags: Flags,
             type: Type,
             payloadId: Int = 0,
+            metadataLength = Int = 0,
             payloadLength: Int = 0,
-            authenticationBytes: ByteArray = byteArrayOf(0,0,0,0),
             checksum: ByteArray = byteArrayOf(0,0,0,0)
         ) : Header? {
             val data = flags.serialize()+
                     type.serialize()+
                     byteArrayOf( (payloadId shr 8).toByte(),(payloadId).toByte() )+
                     byteArrayOf( (payloadLength shr 16).toByte(),(payloadLength shr 8).toByte(), (payloadLength).toByte() )+
-                    authenticationBytes+
                     checksum;
 
             if ( data.size == 16) {
@@ -176,8 +176,8 @@ class Header(var data : ByteArray) : Serde {
             flags: Header.Flags,
             type: Header.Type,
             payloadId: Int = 0,
+            metadataLength = Int = 0,
             payloadLength: Int = 0,
-            authenticationBytes: ByteArray = byteArrayOf(0,0,0,0),
             checksum: ByteArray = byteArrayOf(0,0,0,0)
         ) : ByteArray {
             return flags.serialize() +
@@ -188,7 +188,6 @@ class Header(var data : ByteArray) : Serde {
                         (payloadLength shr 8).toByte(),
                         (payloadLength).toByte()
                     ) +
-                    authenticationBytes +
                     checksum;
         }
     }
@@ -199,12 +198,17 @@ class Header(var data : ByteArray) : Serde {
             (data[3].toInt() and 0xFF) shl 8 or
                     (data[4].toInt() and 0xFF)
             )
+    // 2 Bytes
     val payloadLength : Int = (
-            (data[5].toInt() and 0xFF) shl 16 or
                     (data[6].toInt() and 0xFF) shl 8 or
                     (data[7].toInt() and 0xFF)
             )
-    val authenticationBytes = data.sliceArray(8..11)
+    // 2 Bytes
+    val metadataLength : Int = (
+                    (data[6].toInt() and 0xFF) shl 8 or
+                    (data[7].toInt() and 0xFF)
+            )
+    // 4 Bytes
     val checksum = data.sliceArray(12..15)
 
 

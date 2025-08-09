@@ -4,6 +4,7 @@ import app.beacon.core.helpers.Serde
 
 class Packet(
     val header: Serde,
+    val metadata: Metadata? = null,
     val payload: Serde? = null
 ) : Serde {
     companion object Static {
@@ -21,7 +22,6 @@ class Packet(
                 type = type,
                 payloadId = payloadId,
                 payloadLength = 0,
-                authenticationBytes = authentication,
                 checksum = checksum
             )
             return Packet(

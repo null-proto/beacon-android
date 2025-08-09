@@ -1,9 +1,7 @@
 package app.beacon.core.state
 
 import app.beacon.core.net.Link
-import app.beacon.core.net.LinkProvider
 import app.beacon.core.net.packet.Header
-import app.beacon.core.net.packet.MetaPayload
 import app.beacon.core.net.packet.Packet
 import app.beacon.core.net.packet.Payload
 import app.beacon.core.net.tcp.TcpListener

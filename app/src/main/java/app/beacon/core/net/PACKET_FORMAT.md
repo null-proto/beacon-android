@@ -10,9 +10,12 @@
 ### Header
 The Header is designed to be fixed length (22 Bytes) with 10 segments which includes metadata and integrity checks
 
-| version | flags  |  type  | payload_id | payload_length | metadata_length | metadata_type  | reserved | checksum | Metadata |
-|:-------:|:------:|:------:|:----------:|:--------------:|:---------------:|:--------------:|:--------:|:--------:|:--------:|
-| 1 Byte  | 1 Byte | 1 Byte |  2 Bytes   |    2 Bytes     |     2 Bytes     |     1 Byte     | 8 Bytes  | 4 Bytes  | variable |
+|       | version | flags  |  type  | payload_id | payload_length | metadata_length | metadata_type | reserved | checksum | Metadata |
+|:-----:|:-------:|:------:|:------:|:----------:|:--------------:|:---------------:|:-------------:|:--------:|:--------:|:--------:|
+| size  | 1 Byte  | 1 Byte | 1 Byte |  2 Bytes   |    2 Bytes     |     2 Bytes     |    1 Byte     | 8 Bytes  | 4 Bytes  | variable |
+|       |         |        |        |            |                |                 |               |          |          |          |
+| start |    0    |   1    |   2    |     3      |       5        |        7        |       9       |    10    |    18    |    -     |
+| ends  |    0    |   1    |   2    |     4      |       6        |        8        |       9       |    17    |    21    |    -     |
 
 #### Version
 A version byte defines protocol version starts with `1` refers to `v1`.There is only one version currently available.

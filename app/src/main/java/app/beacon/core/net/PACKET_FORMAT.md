@@ -1,6 +1,5 @@
-# Packet Format
+# Packet Format ` v1.0 `
 
-## Version `v1.0`
 ### Structure
 
 |     Header     |  Metadata  | Payload  |
@@ -8,7 +7,10 @@
 |    22 Bytes    |  Variable  | Variable |
 
 ### Header
-The Header is designed to be fixed length (22 Bytes) with 10 segments which includes metadata and integrity checks
+The Header is designed to be fixed length (22 Bytes) with 10 segments which includes integrity checks
+
+> ***Deprecated***
+>   `metadataType` , `payloadID` will removed in updates ; might be formated again
 
 |       | version | flags  |  type  | payload_id | payload_length | metadata_length | metadata_type | reserved | checksum | Metadata |
 |:-----:|:-------:|:------:|:------:|:----------:|:--------------:|:---------------:|:-------------:|:--------:|:--------:|:--------:|
@@ -21,7 +23,7 @@ The Header is designed to be fixed length (22 Bytes) with 10 segments which incl
 A version byte defines protocol version starts with `1` refers to `v1`.There is only one version currently available.
 
 #### Flags
-Flags 1 Byte or 8 bit or 8 flags.
+Flag 1 Byte or 8 bit.
 
 ```asm
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -44,6 +46,7 @@ The type is 1 byte value which defines its purpose.
 | 0x04 | File   | File transfer                             |
 
 #### Payload ID
+***Deprecated***
 Payload id is used to determined order of payloads. It is important for reconstructing a large file transferred in several payload. It can reconstruct `65,536` payloads that is enough for large files/data.
 
 #### Payload Length
@@ -53,6 +56,7 @@ Payload length is 3 bytes fixed length. It can carry `16 Mega Bytes`.
 Determines overall length of metadata, 1 = Byte or 8-bit
 
 #### metadata_type
+***Deprecated****
 Type of the metadata, with is used to parse metadata into objects
 
 | code | type      |
@@ -61,13 +65,20 @@ Type of the metadata, with is used to parse metadata into objects
 |  1   | Json      |
 
 #### Reserved
-These are reserved for future use.today, just fill with `0`
+These are reserved for future use.
 
 #### Checksum
 Checksum is also 32bt or 4byte fixed length value.There is a plan to use CRC32,or FNV-1a(32bit),or xxHash32 . Checksum verifies before metadata decode.
 
-#### Metadata
-Metadata is used for send special messages like auth-coed,session-code,encoding,...etc
+### Metadata
+Metadata is used for send special messages like auth-code,session-code,encoding,packet-format,...etc.
+```kotlin
+// METADATA FORMAT
+[ 
+//  size, key..size    size, value..size
+    3 , 1 , 2 , 3 ,     4 , 1 , 2 , 3 , 4 ,
+]
+```
 
 ### Payload
-Payload is added up with header, It doesn't contains any magic/identification segments inside.
+Just raw ByteArray nothing special.

@@ -1,8 +1,11 @@
 package app.beacon.core.net.packet
 
+import android.R.attr.data
 import android.R.attr.type
 import android.util.Log
+import androidx.core.util.toRange
 import app.beacon.core.helpers.Serde
+import kotlin.collections.toByteArray
 import kotlin.experimental.and
 
 //class Header(var data : ByteArray) {
@@ -151,46 +154,34 @@ import kotlin.experimental.and
 
 class Header(var data : ByteArray) : Serde {
     companion object Static {
-        @JvmStatic fun from(
+        const val VERSION: Byte = 0
+        @JvmStatic
+        fun from(
             flags: Flags,
             type: Type,
             payloadId: Int = 0,
-            metadataLength = Int = 0,
+            metadataLength: Int = 0,
             payloadLength: Int = 0,
-            checksum: ByteArray = byteArrayOf(0,0,0,0)
-        ) : Header? {
-            val data = flags.serialize()+
-                    type.serialize()+
-                    byteArrayOf( (payloadId shr 8).toByte(),(payloadId).toByte() )+
-                    byteArrayOf( (payloadLength shr 16).toByte(),(payloadLength shr 8).toByte(), (payloadLength).toByte() )+
-                    checksum;
-
-            if ( data.size == 16) {
-                return Header(data)
-            }
-            Log.e("Header:from", "header length not satisfied [ required 16 found ${data.size} ]")
-            return null
-        }
-
-        @JvmStatic fun serialize(
-            flags: Header.Flags,
-            type: Header.Type,
-            payloadId: Int = 0,
-            metadataLength = Int = 0,
-            payloadLength: Int = 0,
-            checksum: ByteArray = byteArrayOf(0,0,0,0)
-        ) : ByteArray {
-            return flags.serialize() +
-                    type.serialize() +
-                    byteArrayOf((payloadId shr 8).toByte(), (payloadId).toByte()) +
-                    byteArrayOf(
-                        (payloadLength shr 16).toByte(),
-                        (payloadLength shr 8).toByte(),
-                        (payloadLength).toByte()
-                    ) +
-                    checksum;
+            metadataType: Int = 0,
+            checksum: ByteArray = byteArrayOf(0, 0, 0, 0)
+        ): Header {
+            return Header(
+                byteArrayOf(VERSION) +
+                        flags.serialize() +
+                        type.serialize() +
+                        // TODO: remove payloadID
+                        byteArrayOf((payloadId shr 8).toByte(), (payloadId).toByte()) +
+                        byteArrayOf((payloadLength shr 8).toByte(), (payloadLength).toByte()) +
+                        byteArrayOf((metadataLength shr 8).toByte(), (metadataLength).toByte()) +
+                        // TODO: remove metadataType
+                        byteArrayOf(metadataType.toByte()) +
+                        (0..7).map { 0.toByte() }.toByteArray() +
+                        checksum
+            );
         }
     }
+
+
     val version: Byte = data[0]
     val flags : Flags = Flags(data[1])
     val type : Type = Type.from(data[2])
@@ -200,16 +191,21 @@ class Header(var data : ByteArray) : Serde {
             )
     // 2 Bytes
     val payloadLength : Int = (
-                    (data[6].toInt() and 0xFF) shl 8 or
-                    (data[7].toInt() and 0xFF)
+                    (data[5].toInt() and 0xFF) shl 8 or
+                    (data[6].toInt() and 0xFF)
             )
     // 2 Bytes
     val metadataLength : Int = (
-                    (data[6].toInt() and 0xFF) shl 8 or
-                    (data[7].toInt() and 0xFF)
+                    (data[7].toInt() and 0xFF) shl 8 or
+                    (data[8].toInt() and 0xFF)
             )
+    // metadata type - 1 Byte
+    val metadataType:Int = data[9].toInt()
+
+    // reserved 10-17
+
     // 4 Bytes
-    val checksum = data.sliceArray(12..15)
+    val checksum = data.sliceArray(18..21)
 
 
     enum class Type: Serde {

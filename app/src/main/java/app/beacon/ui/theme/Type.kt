@@ -34,6 +34,6 @@ val Typography = Typography(
     */
 )
 
-val LilyScriptOneRegular = FontFamily(
+val ManufacturingConsentRegular = FontFamily(
     Font( app.beacon.R.font.manufacturing_consent_regular, weight = FontWeight.Normal)
 )

@@ -2,7 +2,6 @@ package app.beacon.core.net.packet
 
 import androidx.compose.material3.MediumTopAppBar
 import app.beacon.core.helpers.Serde
-import app.beacon.core.state.types.KvStore
 import org.json.JSONObject
 
 class Metadata(var data : ByteArray) : Serde {

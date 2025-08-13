@@ -3,7 +3,7 @@ package app.beacon.core.net.packet
 import app.beacon.core.helpers.Serde
 
 class Packet(
-    val header: Serde,
+    val header: Header,
     val metadata: Metadata? = null,
     val payload: Serde? = null
 ) : Serde {

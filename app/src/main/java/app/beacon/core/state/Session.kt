@@ -31,7 +31,7 @@ class Session {
                 val payload = Payload(body)
                 Packet(
                     header,
-                    payload
+                    payload = payload
                 )
             }
         }
@@ -43,7 +43,7 @@ class Session {
 
     fun echo(link: Link, request: Boolean) {
         link.send(
-            Header.serialize(
+            Header.from(
                 flags = Header.Flags.from(
                     isRequest = request
                 ),

@@ -6,7 +6,7 @@ import app.beacon.core.net.LinkProvider
 import app.beacon.core.net.LinkStatus
 import app.beacon.core.state.Global
 import app.beacon.core.state.Session
-import app.beacon.core.state.types.Entry
+import app.beacon.core.state.types.DeviceEntry
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -27,7 +27,7 @@ class TcpListener( val port : Int = Global.Defaults.tcpListenerPortMain) : LinkP
         socket.bind(InetSocketAddress(this.port))
     }
 
-    private fun listen(session: Session) {
+    private fun listen(session: Session) : CoroutineScope {
         scope.launch {
             try {
                 while (true) {
@@ -38,6 +38,7 @@ class TcpListener( val port : Int = Global.Defaults.tcpListenerPortMain) : LinkP
                 Log.e("TcpListener-listen", "${e.cause}: ${e.message}")
             }
         }
+        return scope
     }
 
     override fun start(session: Session) {
@@ -59,7 +60,7 @@ class TcpListener( val port : Int = Global.Defaults.tcpListenerPortMain) : LinkP
         }
     }
 
-    override fun createLink(entry: Entry): Link {
-        return TcpStream.fromSocketAddress(socketAddress = InetSocketAddress(entry.inetAddress, Global.Defaults.tcpListenerPortMain))
+    override fun createLink(deviceEntry: DeviceEntry): Link {
+        return TcpStream.fromSocketAddress(socketAddress = InetSocketAddress(deviceEntry.inetAddress, Global.Defaults.tcpListenerPortMain))
     }
 }

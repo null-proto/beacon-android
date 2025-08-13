@@ -1,24 +1,22 @@
 package app.beacon.core.state.types
 
-import app.beacon.core.state.types.Entry
-
 class RequestRouter {
-    val map = mutableMapOf<String,(Entry, List<Any>)->Any>(
+    val map = mutableMapOf<String,(DeviceEntry, List<Any>)->Any>(
         Pair("/") { _,_ ->  },
     )
 
-    private fun default(entry: Entry, arg : Any) {
+    private fun default(deviceEntry: DeviceEntry, arg : Any) {
 
     }
 
-    fun add(path: String , proc : (Entry, List<Any>)-> Any) {
+    fun add(path: String , proc : (DeviceEntry, List<Any>)-> Any) {
         map.put(path,proc)
     }
 
-    fun call(path: String, entry: Entry, arg: List<Any>) : Any {
+    fun call(path: String, deviceEntry: DeviceEntry, arg: List<Any>) : Any {
         map[path]?.let {
-            return it(entry,arg)
+            return it(deviceEntry,arg)
         }
-        return default(entry,arg)
+        return default(deviceEntry,arg)
     }
 }

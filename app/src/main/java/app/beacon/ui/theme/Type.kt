@@ -34,10 +34,6 @@ val Typography = Typography(
     */
 )
 
-val NiconneRegular = FontFamily(
-    Font(app.beacon.R.font.niconneregular, weight = FontWeight.Normal)
-)
-
-val LilyScriptOneRegular = FontFamily(
-    Font( app.beacon.R.font.lilyscript, weight = FontWeight.Normal)
+val ManufacturingConsentRegular = FontFamily(
+    Font( app.beacon.R.font.manufacturing_consent_regular, weight = FontWeight.Normal)
 )

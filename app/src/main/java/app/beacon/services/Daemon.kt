@@ -5,11 +5,15 @@ import android.content.Intent
 import android.os.IBinder
 import android.util.Log
 import app.beacon.core.state.Global
+import app.beacon.core.state.Session
 
 class Daemon: Service() {
+    var session: Session? = null
+
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
-        Log.i("Services:Daemon:onStartCommand","start")
+        Log.i("Services:Daemon:onStartCommand","with startID:$startId")
         Global.isDaemonRunning = true
+        session = Session(this)
         return START_STICKY
     }
 
@@ -24,6 +28,7 @@ class Daemon: Service() {
 
     override fun onDestroy() {
         Log.i("Services:Daemon:onDestroy","stop")
+        session?.stop()
         super.onDestroy()
     }
 }

@@ -27,7 +27,7 @@ class TcpListener( val port : Int = Global.Defaults.tcpListenerPortMain) : LinkP
         socket.bind(InetSocketAddress(this.port))
     }
 
-    private fun listen(session: Session) {
+    private fun listen(session: Session) : CoroutineScope {
         scope.launch {
             try {
                 while (true) {
@@ -38,6 +38,7 @@ class TcpListener( val port : Int = Global.Defaults.tcpListenerPortMain) : LinkP
                 Log.e("TcpListener-listen", "${e.cause}: ${e.message}")
             }
         }
+        return scope
     }
 
     override fun start(session: Session) {

@@ -1,8 +1,6 @@
 package app.beacon.core.net.packet
 
-import androidx.compose.material3.MediumTopAppBar
 import app.beacon.core.helpers.Serde
-import org.json.JSONObject
 
 class Metadata(var data : ByteArray) : Serde {
     override fun serialize(): ByteArray {

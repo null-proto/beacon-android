@@ -12,7 +12,7 @@
 	in{
 		devShells.${system}.androidDev = packages.mkShell {
 			buildInputs = [
-				packages.android-studio
+				packages.android-studio-stable
 			];
 
 			shellHook = ''

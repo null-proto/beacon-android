@@ -18,7 +18,6 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import app.beacon.core.Device
 import app.beacon.ui.theme.Typography
 
 
@@ -26,7 +25,7 @@ import app.beacon.ui.theme.Typography
 @Composable fun DeviceItem(
     name : String = "No device",
     ipAddress : String = "127.0.0.1",
-    type : Device.IntoDeviceType = Device.DeviceType.Unknown,
+//    type : Device.IntoDeviceType = Device.DeviceType.Unknown,
     paddingValues: PaddingValues = PaddingValues(0.dp),
     onClick:()->Unit = {}
 ) {
@@ -44,14 +43,14 @@ import app.beacon.ui.theme.Typography
 //                modifier = Modifier.fillMaxSize(),
                 contentAlignment = Alignment.Center
             ) {
-                Icon(
-                    painter = painterResource(type.getIcon()),
-                    contentDescription = name,
-                    modifier = Modifier
-                        .size(48.dp)
-                        .padding(end = 15.dp)
-                        .graphicsLayer(alpha = 0.5f)
-                )
+//                Icon(
+//                    painter = painterResource(type.getIcon()),
+//                    contentDescription = name,
+//                    modifier = Modifier
+//                        .size(48.dp)
+//                        .padding(end = 15.dp)
+//                        .graphicsLayer(alpha = 0.5f)
+//                )
             }
             Column(
                 modifier = Modifier.fillMaxWidth()

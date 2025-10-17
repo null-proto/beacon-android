@@ -1,6 +1,7 @@
 package app.beacon.ui.theme
 
 import android.app.Activity
+import android.content.Context
 import android.os.Build
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme
@@ -10,6 +11,7 @@ import androidx.compose.material3.dynamicLightColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalContext
+import app.beacon.state.Globals
 
 private val DarkColorScheme = darkColorScheme(
     primary = Purple80,
@@ -35,13 +37,21 @@ private val LightColorScheme = lightColorScheme(
 
 @Composable
 fun BeaconTheme(
-    darkTheme: Boolean = isSystemInDarkTheme(),
     // Dynamic color is available on Android 12+
-    dynamicColor: Boolean = true,
     content: @Composable () -> Unit
 ) {
+    val pref = LocalContext.current.getSharedPreferences(Globals.PreferenceKeys.Theme.NAME ,
+        Context.MODE_PRIVATE)
+    val dynamicColor = pref.getBoolean(Globals.PreferenceKeys.Theme.DYNAMIC_THEME,true)
+
+    val darkTheme = when (pref.getString(Globals.PreferenceKeys.Theme.APP_THEME , "system")) {
+        "light" -> false
+        "dark" -> true
+        else -> { isSystemInDarkTheme() }
+    }
+
     val colorScheme = when {
-        dynamicColor && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S -> {
+        dynamicColor -> {
             val context = LocalContext.current
             if (darkTheme) dynamicDarkColorScheme(context) else dynamicLightColorScheme(context)
         }

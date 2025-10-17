@@ -7,15 +7,17 @@ import android.content.Intent
 import android.os.IBinder
 import android.util.Log
 import androidx.core.app.NotificationCompat
+import app.beacon.core.net.Listener
+import app.beacon.state.Globals
 import app.beacon.state.Globals.Notification
 
 class Daemon: Service() {
-//    var session: Session? = null
+    lateinit var server : Listener
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         Log.i("Services:Daemon:onStartCommand","with startID:$startId")
-//        Global.isDaemonRunning = true
-//        session = Session(this)
+        Globals.isDaemonRunning = true
+        server = Listener()
         return START_STICKY
     }
 
@@ -39,13 +41,15 @@ class Daemon: Service() {
         val channel = NotificationChannel(
             Notification.MainChannelDaemon.ID,
             Notification.MainChannelDaemon.NAME,
-            NotificationManager.IMPORTANCE_LOW
+            NotificationManager.IMPORTANCE_NONE
         )
         getSystemService(NotificationManager::class.java).createNotificationChannel(channel)
 
         return NotificationCompat.Builder(this , Notification.MainChannelDaemon.ID)
             .setContentTitle(Notification.MainChannelDaemon.TITLE)
             .setContentText(Notification.MainChannelDaemon.DESCRIPTION)
+            .setCategory(Notification.MainChannelDaemon.CATEGORY)
+            .setGroup(Notification.MainChannelDaemon.CATEGORY)
             .build()
     }
 }

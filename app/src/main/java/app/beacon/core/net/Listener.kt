@@ -1,6 +1,7 @@
 package app.beacon.core.net
 
 import android.util.Log
+import app.beacon.state.Globals
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -14,13 +15,17 @@ import java.net.SocketAddress
 import java.nio.channels.AsynchronousServerSocketChannel
 import java.nio.channels.SocketChannel
 
-class Listener(port: Int = 4800) {
-    val socket = ServerSocket(port , 30 ,InetAddress.getByName("::"))
-    val supervisor = CoroutineScope(Dispatchers.Default)
+class Listener() {
+    val socket = ServerSocket(Globals.RuntimeConfig.Network.port , 30 ,InetAddress.getByName(Globals.RuntimeConfig.Network.ip))
+    val supervisor = CoroutineScope(Dispatchers.Default + SupervisorJob())
+    init {
+        socket.soTimeout = Globals.RuntimeConfig.Network.timeout
+    }
 
     fun listen() {
         while (true) {
             val client = socket.accept();
+            Log.i("Listener", "connected with ${client.inetAddress} , ${client.soTimeout}")
             supervisor.launch {
                 try {
                     val fm = client.inputStream.readNBytes(8).map { it.toUByte() }

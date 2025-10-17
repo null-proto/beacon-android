@@ -17,6 +17,7 @@ data object Globals {
         object Network {
             var port : Int = 4800
             var ip : String = "::"
+            var timeout : Int = 5000
         }
     }
 
@@ -32,6 +33,7 @@ data object Globals {
     fun loadNetworkConfig(context: Context) {
         val pref = context.getSharedPreferences(PreferenceKeys.Network.NAME, Context.MODE_PRIVATE)
         RuntimeConfig.Network.port = pref.getInt(PreferenceKeys.Network.DAEMON_PORT, RuntimeConfig.Network.port)
+        RuntimeConfig.Network.timeout = pref.getInt(PreferenceKeys.Network.DAEMON_NET_TIMEOUT, RuntimeConfig.Network.timeout)
         RuntimeConfig.Network.ip = pref.getString(PreferenceKeys.Network.DAEMON_BIND_IP, RuntimeConfig.Network.ip) ?: RuntimeConfig.Network.ip
     }
     fun generateNewInf(context: Context) : Inf {
@@ -79,6 +81,8 @@ data object Globals {
             const val DAEMON_PORT = "daemon-port"
 
             const val DAEMON_BIND_IP = "daemon-ip"
+
+            const val DAEMON_NET_TIMEOUT = "daemon-net-timeout"
         }
 
         object Theme {

@@ -6,6 +6,7 @@ import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
+import app.beacon.R
 
 // Set of Material typography styles to start with
 val Typography = Typography(
@@ -35,5 +36,7 @@ val Typography = Typography(
 )
 
 val ManufacturingConsentRegular = FontFamily(
+//    checkout git-lsf file before build
     Font( app.beacon.R.font.manufacturing_consent_regular, weight = FontWeight.Normal)
+//    Font(R.font.manufacturing_consent_regular)
 )

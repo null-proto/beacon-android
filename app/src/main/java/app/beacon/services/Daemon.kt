@@ -10,14 +10,24 @@ import androidx.core.app.NotificationCompat
 import app.beacon.core.net.Listener
 import app.beacon.state.Globals
 import app.beacon.state.Globals.Notification
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 class Daemon: Service() {
-    lateinit var server : Listener
+    var server : Listener = Listener()
+    var localScope = CoroutineScope(Dispatchers.IO)
+
+    private fun startListen() {
+        localScope.launch {
+            server.listen()
+        }
+    }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         Log.i("Services:Daemon:onStartCommand","with startID:$startId")
         Globals.isDaemonRunning = true
-        server = Listener()
+        startListen()
         return START_STICKY
     }
 
@@ -33,7 +43,7 @@ class Daemon: Service() {
 
     override fun onDestroy() {
         Log.i("Services:Daemon:onDestroy","stop")
-//        session?.stop()
+        server.close()
         super.onDestroy()
     }
 

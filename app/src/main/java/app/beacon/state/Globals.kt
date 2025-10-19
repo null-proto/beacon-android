@@ -10,7 +10,9 @@ import kotlin.uuid.Uuid
 
 data object Globals {
     var isDaemonRunning: Boolean = false
+    var isIPv6MulticastingRunning: Boolean = false
     var isScanningMode: Boolean = false
+
     lateinit var inf : Inf
 
     object RuntimeConfig {

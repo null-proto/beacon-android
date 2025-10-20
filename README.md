@@ -1,4 +1,5 @@
 # Beacon
+[![Android CI](https://github.com/null-proto/beacon-android/actions/workflows/android-ci.yml/badge.svg)](https://github.com/null-proto/beacon-android/actions/workflows/android-ci.yml)
 
 A remote access/communication tool for access android device features and share data
 

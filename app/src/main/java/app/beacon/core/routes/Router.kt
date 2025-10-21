@@ -3,11 +3,10 @@ package app.beacon.core.routes
 import android.content.Context
 import android.util.Log
 import app.beacon.core.PairBox
-import kotlin.contracts.contract
 
 class Router(val context: Context) {
-    private var map : HashMap<String , Task> = hashMapOf(
-        Pair("test" , object : Task {
+    private var map : HashMap<String , Path> = hashMapOf(
+        Pair("test" , object : Path {
             override fun work(context: Context, data: PairBox) {
                 Log.w("Router" , "Test-point route")
             }

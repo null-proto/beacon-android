@@ -21,6 +21,7 @@ class MakeNotification : Task<Args> {
     )
 
     override fun run(context: Context, arg: Args) {
+        // TODO: Create channel
         val notify = NotificationCompat.Builder(context, arg.whois.name)
             .setContentTitle(arg.title)
             .setContentText(arg.message)

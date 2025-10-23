@@ -3,8 +3,8 @@ package app.beacon.core.database.schema
 import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.Index
-import app.beacon.core.PairBox
 import app.beacon.core.Serde
+import app.beacon.core.net.types.Kv
 
 
 @OptIn(ExperimentalUnsignedTypes::class)
@@ -25,14 +25,14 @@ data class SecreteStore(
     val longTermSecrete: String,
 ): Serde<SecreteStore> {
     override fun serialize(): UByteArray {
-        return PairBox().apply {
+        return Kv().apply {
             put("uuid" , uuid)
             put("long-term-sec" , longTermSecrete)
         }.serialize()
     }
 
     override fun deserialize(data: UByteArray): SecreteStore? {
-        val pb = PairBox(data)
+        val pb = Kv(data)
         return SecreteStore(
             uuid = pb.get("uuid") ?: return null,
             longTermSecrete = pb.get("long-term-sec") ?: return null,

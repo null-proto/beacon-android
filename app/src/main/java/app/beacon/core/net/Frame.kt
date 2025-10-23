@@ -1,8 +1,9 @@
 package app.beacon.core.net
 
 import androidx.annotation.Size
-import app.beacon.core.PairBox
 import app.beacon.core.Serde
+import app.beacon.core.net.types.Bin
+import app.beacon.core.net.types.Kv
 
 
 @OptIn(ExperimentalUnsignedTypes::class)
@@ -40,7 +41,7 @@ data class Frame(
             )
         }
 
-        fun fromPairBox(data: PairBox): Frame {
+        fun fromKv(data: Kv): Frame {
             val data = data.serialize()
             return Frame(
                 header = Header(
@@ -82,4 +83,15 @@ data class Frame(
         return result
     }
 
+    fun getKv() : Kv? {
+        return if (header.type==2u) {
+            Kv(data = data.map { it.toUByte() }.toUByteArray())
+        } else {
+            null
+        }
+    }
+
+    fun getBin() : Bin {
+        return Bin(data = data)
+    }
 }

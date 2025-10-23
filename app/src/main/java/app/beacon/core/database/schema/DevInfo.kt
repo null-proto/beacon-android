@@ -4,8 +4,8 @@ package app.beacon.core.database.schema
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import app.beacon.core.PairBox
 import app.beacon.core.Serde
+import app.beacon.core.net.types.Kv
 import kotlin.uuid.ExperimentalUuidApi
 
 @Entity( tableName = "main_table" )
@@ -17,7 +17,7 @@ data class DevInfo(
     val lastIp: String,
 ) : Serde<DevInfo> {
     override fun serialize(): UByteArray {
-        return PairBox().apply {
+        return Kv().apply {
             put("uuid" , uuid)
             put("name" , name)
             put("last-ip" , lastIp)
@@ -25,7 +25,7 @@ data class DevInfo(
     }
 
     override fun deserialize(data: UByteArray): DevInfo? {
-        val pb = PairBox(data)
+        val pb = Kv(data)
         return DevInfo(
             uuid = pb.get("uuid") ?: return null,
             name = pb.get("name") ?: return null,

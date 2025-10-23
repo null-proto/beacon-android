@@ -1,7 +1,7 @@
 package app.beacon.core.device
 
-import app.beacon.core.PairBox
 import app.beacon.core.Serde
+import app.beacon.core.net.types.Kv
 
 @OptIn(ExperimentalUnsignedTypes::class)
 data class Device(
@@ -10,7 +10,7 @@ data class Device(
 ) : Serde<Device> {
 
     override fun serialize(): UByteArray {
-        val pb = PairBox().apply {
+        val pb = Kv().apply {
             put("ip",ipAddress)
             put("name" , name ?: ipAddress )
         }
@@ -18,7 +18,7 @@ data class Device(
     }
 
     override fun deserialize(data: UByteArray): Device? {
-        val pb = PairBox(data);
+        val pb = Kv(data);
         val ipAddress = pb.get("ip") ?: return null;
         return Device(
             ipAddress = ipAddress,

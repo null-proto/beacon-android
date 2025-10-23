@@ -1,10 +1,10 @@
 package app.beacon.core.routes
 
 import android.content.Context
-import app.beacon.core.PairBox
+import app.beacon.core.net.types.Kv
 import app.beacon.modules.DebugLogModule
 
-class Router(val context: Context) {
+class Router {
     private var map : HashMap<String , Module> = hashMapOf(
         Pair(
             DebugLogModule.name , DebugLogModule
@@ -12,7 +12,7 @@ class Router(val context: Context) {
     );
 
 
-    suspend fun route(data : PairBox) {
+    suspend fun route(context: Context,data : Kv) {
         val key = data.get("route")
         map[key]?.work(context,data)
     }

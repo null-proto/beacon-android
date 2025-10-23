@@ -1,7 +1,9 @@
-package app.beacon.core
+package app.beacon.core.net.types
+
+import app.beacon.core.Serde
 
 @OptIn(ExperimentalUnsignedTypes::class)
-class PairBox( private var data : UByteArray  = ubyteArrayOf() ) : Serde<PairBox> {
+class Kv( private var data : UByteArray  = ubyteArrayOf() ) : Serde<Kv> {
     val len : Int
         get() {
             return data.size
@@ -74,7 +76,7 @@ class PairBox( private var data : UByteArray  = ubyteArrayOf() ) : Serde<PairBox
         return data
     }
 
-    override fun deserialize(data: UByteArray): PairBox {
-        return PairBox(data)
+    override fun deserialize(data: UByteArray): Kv {
+        return Kv(data)
     }
 }

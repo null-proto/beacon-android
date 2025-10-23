@@ -12,8 +12,10 @@ class Router {
     );
 
 
-    suspend fun route(context: Context,data : Kv) {
-        val key = data.get("route")
-        map[key]?.work(context,data)
+    suspend fun route(args: Args) {
+        if (args.kv!=null) {
+            val key = args.kv.get("route")
+            map[key]?.work(args)
+        }
     }
 }

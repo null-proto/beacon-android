@@ -10,24 +10,18 @@ import androidx.core.app.NotificationCompat
 import app.beacon.core.net.Listener
 import app.beacon.state.Globals
 import app.beacon.state.Globals.Notification
+import app.beacon.state.Session
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 class Daemon: Service() {
-    var server : Listener = Listener()
-    var localScope = CoroutineScope(Dispatchers.IO)
-
-    private fun startListen() {
-        localScope.launch {
-            server.listen()
-        }
-    }
+    var rt = CoroutineScope(Dispatchers.IO)
+    val session = Session(context = this, rt = rt)
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         Log.i("Services:Daemon:onStartCommand","with startID:$startId")
-        Globals.isDaemonRunning = true
-        startListen()
+        session.start()
         return START_STICKY
     }
 
@@ -35,6 +29,7 @@ class Daemon: Service() {
         Log.i("Services:Daemon:onCreate","start")
         super.onCreate()
         startForeground(1 , makeNotification())
+        Globals.isDaemonRunning = true
     }
 
     override fun onBind(intent: Intent?): IBinder? {
@@ -43,7 +38,7 @@ class Daemon: Service() {
 
     override fun onDestroy() {
         Log.i("Services:Daemon:onDestroy","stop")
-        server.close()
+        session.exit()
         super.onDestroy()
     }
 

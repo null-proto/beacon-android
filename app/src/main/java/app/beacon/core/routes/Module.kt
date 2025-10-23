@@ -5,5 +5,5 @@ import app.beacon.core.net.types.Kv
 
 interface Module {
     val name : String
-    suspend fun work(context: Context, data: Kv)
+    suspend fun work(args: Args)
 }

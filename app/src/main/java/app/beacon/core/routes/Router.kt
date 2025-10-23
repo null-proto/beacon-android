@@ -1,20 +1,18 @@
 package app.beacon.core.routes
 
 import android.content.Context
-import android.util.Log
 import app.beacon.core.PairBox
+import app.beacon.modules.DebugLogModule
 
 class Router(val context: Context) {
-    private var map : HashMap<String , Path> = hashMapOf(
-        Pair("test" , object : Path {
-            override fun work(context: Context, data: PairBox) {
-                Log.w("Router" , "Test-point route")
-            }
-        })
+    private var map : HashMap<String , Module> = hashMapOf(
+        Pair(
+            DebugLogModule.name , DebugLogModule
+        )
     );
 
 
-    fun route(data : PairBox) {
+    suspend fun route(data : PairBox) {
         val key = data.get("route")
         map[key]?.work(context,data)
     }

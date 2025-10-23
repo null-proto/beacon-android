@@ -1,23 +1,20 @@
 package app.beacon.functions
 
 import android.Manifest
-import android.app.NotificationManager
 import android.content.Context
 import android.content.pm.PackageManager
 import android.util.Log
-import androidx.annotation.RequiresPermission
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import androidx.core.content.ContextCompat
-import app.beacon.core.database.schema.Pop
+import app.beacon.core.database.schema.DevInfo
 import app.beacon.functions.MakeNotification.Args
-import app.beacon.state.Globals
 
 class MakeNotification : Task<Args> {
     data class Args(
         val title : String,
         val message : String,
-        val whois : Pop
+        val whois : DevInfo
     )
 
     override fun run(context: Context, arg: Args) {

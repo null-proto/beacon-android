@@ -6,24 +6,24 @@ import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.Query
 import androidx.room.Update
-import app.beacon.core.database.schema.Pop
+import app.beacon.core.database.schema.DevInfo
 
 @Dao
 interface Registry {
     @Insert
-    suspend fun addToReg(dev : Pop)
+    suspend fun addToReg(dev : DevInfo)
 
     @Update
-    suspend fun updateToReg(dev: Pop)
+    suspend fun updateToReg(dev: DevInfo)
 
     @Delete
-    suspend fun dropToReg(dev: Pop)
+    suspend fun dropToReg(dev: DevInfo)
 
-    @Query("SELECT * FROM `open_auth-v2`")
-    fun getAllReg() : LiveData<List<Pop>>
+    @Query("SELECT * FROM `main_table`")
+    fun getAllReg() : LiveData<List<DevInfo>>
 
 
-    @Query("SELECT * FROM `open_auth-v2` WHERE uuid = :uuid LIMIT 1")
-    fun getReg(uuid: String) : LiveData<Pop?>
+    @Query("SELECT * FROM `main_table` WHERE uuid = :uuid LIMIT 1")
+    fun getReg(uuid: String) : LiveData<DevInfo?>
 
 }

@@ -8,6 +8,7 @@ import androidx.activity.enableEdgeToEdge
 import androidx.compose.material3.ExperimentalMaterial3Api
 import app.beacon.services.Daemon
 import app.beacon.state.Globals
+import app.beacon.ui.helpers.CrashHandler
 import app.beacon.ui.navigators.MainActivityNavigator
 import app.beacon.ui.theme.BeaconTheme
 

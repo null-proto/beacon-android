@@ -11,6 +11,7 @@ import app.beacon.core.net.Listener
 import app.beacon.state.Globals
 import app.beacon.state.Globals.Notification
 import app.beacon.state.Session
+import app.beacon.ui.helpers.CrashHandler
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -21,6 +22,7 @@ class Daemon: Service() {
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         Log.i("Services:Daemon:onStartCommand","with startID:$startId")
+        Thread.setDefaultUncaughtExceptionHandler(CrashHandler(this))
         session.start()
         return START_STICKY
     }
@@ -48,7 +50,8 @@ class Daemon: Service() {
             Notification.MainChannelDaemon.NAME,
             NotificationManager.IMPORTANCE_NONE
         )
-        getSystemService(NotificationManager::class.java).createNotificationChannel(channel)
+        val nm = getSystemService(NOTIFICATION_SERVICE) as NotificationManager
+        nm.createNotificationChannel(channel)
 
         return NotificationCompat.Builder(this , Notification.MainChannelDaemon.ID)
             .setContentTitle(Notification.MainChannelDaemon.TITLE)

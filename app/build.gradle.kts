@@ -10,8 +10,8 @@ android {
 
     defaultConfig {
         applicationId = "app.beacon"
-        minSdk = 34
-        targetSdk = 35
+        minSdk = 33
+        targetSdk = 33
         versionCode = 1
         versionName = "1.0"
 
@@ -37,6 +37,7 @@ android {
     buildFeatures {
         compose = true
     }
+    buildToolsVersion = "35.0.1"
 }
 
 tasks.register("printCpath") {

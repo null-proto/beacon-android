@@ -9,7 +9,6 @@ import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
 
 data object Globals {
-    var isCrashHandlerRunning: Boolean = false
     var isDaemonRunning: Boolean = false
     var isIPv6MulticastingRunning: Boolean = false
     var isScanningMode: Boolean = false

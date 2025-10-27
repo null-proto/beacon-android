@@ -17,13 +17,9 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 class Daemon: Service() {
-    var rt = CoroutineScope(Dispatchers.IO)
-    val session = Session(context = this, rt = rt)
-
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         Log.i("Services:Daemon:onStartCommand","with startID:$startId")
         Thread.setDefaultUncaughtExceptionHandler(CrashHandler(this))
-        session.start()
         return START_STICKY
     }
 
@@ -40,7 +36,6 @@ class Daemon: Service() {
 
     override fun onDestroy() {
         Log.i("Services:Daemon:onDestroy","stop")
-        session.exit()
         super.onDestroy()
     }
 

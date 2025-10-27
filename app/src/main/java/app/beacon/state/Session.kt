@@ -36,21 +36,21 @@ class Session(val context: Context , val rt : CoroutineScope) {
         registry = database.registry(),
         statelessDB = StatelessDB(),
         context = context,
-        multicast = null,
+//        multicast = null,
     )
 
     data class State(
         val registry: Registry,
         val statelessDB: StatelessDB,
         val context: Context,
-        var multicast : MulticastInf?
+//        var multicast : MulticastInf?
     )
 
-    data class MulticastInf(
-        val job: Job,
-        val netIFace: NetworkInterface,
-        val capabilities: NetworkCapabilities,
-    )
+//    data class MulticastInf(
+//        val job: Job,
+//        val netIFace: NetworkInterface,
+//        val capabilities: NetworkCapabilities,
+//    )
 
     suspend fun attach(frame: Frame) {
         val kv = frame.getKv()
@@ -91,55 +91,55 @@ class Session(val context: Context , val rt : CoroutineScope) {
         rt.cancel()
     }
 
-    fun getActiveNetworkInterface() : NetworkInterface? {
-        val cm = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-        val iFace = cm.getLinkProperties(cm.activeNetwork)?.interfaceName
-        return NetworkInterface.getByName(iFace)
-    }
-
-    @SuppressLint("DiscouragedPrivateApi")
-    fun getAllAccessPoint() : Array<String> {
-        val cm = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-        val method = ConnectivityManager::class.java.getDeclaredMethod("getTetheredIfaces")
-        return method.invoke(cm) as Array<String>
-    }
-
-    fun startMulticast() {
-        val cm = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-        val active = cm.activeNetwork ?: return
-        val caps = cm.getNetworkCapabilities(active) ?: return
-        val iFace = cm.getLinkProperties(active)?.interfaceName
-        val network = NetworkInterface.getByName(iFace)
-        Log.i("Session", "Active interface: $iFace")
-
-        when {
-            // ignore cellular network
-            caps.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR) -> {
-                Log.e("Session", "Active interface \"$iFace\" is Unsupported for multicasting")
-            }
-
-            network.supportsMulticast() -> {
-                Log.w("Session", "Multicast: interface with multicast")
-                state.multicast = MulticastInf(
-                    netIFace = network,
-                    capabilities = caps,
-                    job = rt.launch {
-                        MCast(network).listen()
-                    }
-                )
-            }
-
-            else -> {
-                Log.w("Session", "Multicast: UnSupport")
-            }
-
-        }
-
-    }
-
-    fun stopMulticast() {
-        state.multicast?.job?.cancel()
-        state.multicast = null
-    }
+//    fun getActiveNetworkInterface() : NetworkInterface? {
+//        val cm = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+//        val iFace = cm.getLinkProperties(cm.activeNetwork)?.interfaceName
+//        return NetworkInterface.getByName(iFace)
+//    }
+//
+//    @SuppressLint("DiscouragedPrivateApi")
+//    fun getAllAccessPoint() : Array<String> {
+//        val cm = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+//        val method = ConnectivityManager::class.java.getDeclaredMethod("getTetheredIfaces")
+//        return method.invoke(cm) as Array<String>
+//    }
+//
+//    fun startMulticast() {
+//        val cm = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+//        val active = cm.activeNetwork ?: return
+//        val caps = cm.getNetworkCapabilities(active) ?: return
+//        val iFace = cm.getLinkProperties(active)?.interfaceName
+//        val network = NetworkInterface.getByName(iFace)
+//        Log.i("Session", "Active interface: $iFace")
+//
+//        when {
+//            // ignore cellular network
+//            caps.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR) -> {
+//                Log.e("Session", "Active interface \"$iFace\" is Unsupported for multicasting")
+//            }
+//
+//            network.supportsMulticast() -> {
+//                Log.w("Session", "Multicast: interface with multicast")
+//                state.multicast = MulticastInf(
+//                    netIFace = network,
+//                    capabilities = caps,
+//                    job = rt.launch {
+//                        MCast(network).listen()
+//                    }
+//                )
+//            }
+//
+//            else -> {
+//                Log.w("Session", "Multicast: UnSupport")
+//            }
+//
+//        }
+//
+//    }
+//
+//    fun stopMulticast() {
+//        state.multicast?.job?.cancel()
+//        state.multicast = null
+//    }
 }
 

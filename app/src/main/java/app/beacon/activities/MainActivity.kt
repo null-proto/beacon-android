@@ -13,18 +13,10 @@ import app.beacon.ui.navigators.MainActivityNavigator
 import app.beacon.ui.theme.BeaconTheme
 
 class MainActivity : ComponentActivity() {
-    fun startDaemon() {
-        if (!Globals.isDaemonRunning) {
-            this.startService(Intent(this, Daemon::class.java))
-        }
-    }
-
     @OptIn(ExperimentalMaterial3Api::class)
     override fun onCreate(savedInstanceState: Bundle?) {
-        Globals.setup(this)
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
-        startDaemon()
 
         setContent {
             BeaconTheme {

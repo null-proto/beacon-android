@@ -1,9 +1,14 @@
 package app.beacon.state
 
 import androidx.compose.runtime.mutableStateMapOf
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.lifecycle.ViewModel
 
-class StatelessDB : ViewModel() {
+object StatelessDB : ViewModel() {
+    var dynamicTheme =  mutableStateOf(false)
+    var colorMode =  mutableStateOf("system")
+
     private val _state = mutableStateMapOf<String , String>()
 
     val state = _state

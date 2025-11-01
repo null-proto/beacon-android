@@ -4,6 +4,9 @@ import androidx.activity.compose.LocalActivity
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -15,6 +18,7 @@ import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
@@ -24,6 +28,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import app.beacon.ui.layouts.settings.Appearance
 import app.beacon.ui.layouts.settings.DebugLayout
 import app.beacon.ui.layouts.settings.MainLayout
 import app.beacon.ui.theme.Typography
@@ -65,26 +70,26 @@ import app.beacon.ui.theme.Typography
                         },
                         shape = RoundedCornerShape(25)
                     ) {
-                        Icon(
-                            painter = painterResource(
-                                app.beacon.R.drawable.chevron_left
-                            ),
-                            contentDescription = null
-                        )
+                        Icon( Icons.AutoMirrored.Filled.ArrowBack , contentDescription = null )
                     }
                 },
                 actions = { },
-                scrollBehavior = null
+                scrollBehavior = null,
+                modifier = Modifier.padding(bottom = 16.dp)
             )
         }
     ) { innerPadding ->
 //        HomeLayout(innerPadding)
         NavHost(navController = navHostController, startDestination = MainLayout.Settings.name , modifier = Modifier.padding(innerPadding)) {
             composable(MainLayout.Settings.name) {
-                MainLayout.Compose(currentValue, navHostController)
+                MainLayout.Compose(context = LocalContext.current,currentValue, navHostController)
             }
             composable(MainLayout.Debug.name) {
                 DebugLayout()
+            }
+
+            composable(MainLayout.Appearance.name) {
+                Appearance()
             }
         }
     }

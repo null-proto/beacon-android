@@ -34,14 +34,12 @@ class Session(val context: Context , val rt : CoroutineScope) {
 
     val state = State(
         registry = database.registry(),
-        statelessDB = StatelessDB(),
         context = context,
 //        multicast = null,
     )
 
     data class State(
         val registry: Registry,
-        val statelessDB: StatelessDB,
         val context: Context,
 //        var multicast : MulticastInf?
     )

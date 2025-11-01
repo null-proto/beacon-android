@@ -15,6 +15,7 @@ import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
@@ -81,7 +82,7 @@ import app.beacon.ui.theme.Typography
 //        HomeLayout(innerPadding)
         NavHost(navController = navHostController, startDestination = MainLayout.Settings.name , modifier = Modifier.padding(innerPadding)) {
             composable(MainLayout.Settings.name) {
-                MainLayout.Compose(currentValue, navHostController)
+                MainLayout.Compose(LocalContext.current,currentValue, navHostController)
             }
             composable(MainLayout.Debug.name) {
                 DebugLayout()

@@ -45,10 +45,10 @@ import app.beacon.ui.theme.Typography
         onClick = onClick,
         modifier = Modifier.padding(paddingValues)
             .fillMaxWidth()
-            .padding(vertical = 6.dp)
     ) {
         Column(
-            horizontalAlignment = Alignment.CenterHorizontally
+            horizontalAlignment = Alignment.CenterHorizontally,
+            modifier = Modifier.padding(vertical = 8.dp)
         ) {
             Row(
                 modifier = Modifier.fillMaxWidth()

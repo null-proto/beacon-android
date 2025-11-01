@@ -12,6 +12,7 @@ import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalContext
 import app.beacon.state.Globals
+import app.beacon.state.StatelessDB
 
 private val DarkColorScheme = darkColorScheme(
     primary = Purple80,
@@ -42,16 +43,19 @@ fun BeaconTheme(
 ) {
     val pref = LocalContext.current.getSharedPreferences(Globals.PreferenceKeys.Theme.NAME ,
         Context.MODE_PRIVATE)
-    val dynamicColor = pref.getBoolean(Globals.PreferenceKeys.Theme.DYNAMIC_THEME,true)
 
-    val darkTheme = when (pref.getString(Globals.PreferenceKeys.Theme.APP_THEME , "system")) {
+    StatelessDB.dynamicTheme.value = pref.getBoolean(Globals.PreferenceKeys.Theme.DYNAMIC_THEME , true)
+    StatelessDB.colorMode.value = pref.getString(Globals.PreferenceKeys.Theme.APP_THEME , "system") ?: "system"
+
+    val darkTheme = when (StatelessDB.colorMode.value) {
         "light" -> false
         "dark" -> true
         else -> { isSystemInDarkTheme() }
     }
 
+
     val colorScheme = when {
-        dynamicColor -> {
+        StatelessDB.dynamicTheme.value -> {
             val context = LocalContext.current
             if (darkTheme) dynamicDarkColorScheme(context) else dynamicLightColorScheme(context)
         }

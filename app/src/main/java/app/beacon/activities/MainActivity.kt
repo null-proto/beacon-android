@@ -13,6 +13,7 @@ import app.beacon.ui.navigators.MainActivityNavigator
 import app.beacon.ui.theme.BeaconTheme
 
 class MainActivity : ComponentActivity() {
+
     @OptIn(ExperimentalMaterial3Api::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

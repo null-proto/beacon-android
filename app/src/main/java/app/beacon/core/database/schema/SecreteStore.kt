@@ -3,6 +3,7 @@ package app.beacon.core.database.schema
 import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.Index
+import androidx.room.PrimaryKey
 import app.beacon.core.Serde
 import app.beacon.core.net.types.Kv
 
@@ -22,6 +23,8 @@ import app.beacon.core.net.types.Kv
 )
 data class SecreteStore(
     val uuid: String,
+    @PrimaryKey(autoGenerate = true)
+    val secID : Int,
     val longTermSecrete: String,
 ): Serde<SecreteStore> {
     override fun serialize(): UByteArray {
@@ -35,6 +38,7 @@ data class SecreteStore(
         val pb = Kv(data)
         return SecreteStore(
             uuid = pb.get("uuid") ?: return null,
+            secID = pb.get("id")?.toInt() ?: return null,
             longTermSecrete = pb.get("long-term-sec") ?: return null,
         )
     }

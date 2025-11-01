@@ -22,7 +22,6 @@ import app.beacon.ui.navigators.SettingsActivityNavigator
 import app.beacon.ui.theme.BeaconTheme
 
 class DiscoveryActivity : ComponentActivity() {
-    @OptIn(ExperimentalMaterial3Api::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()

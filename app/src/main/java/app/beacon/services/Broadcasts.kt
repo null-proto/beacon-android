@@ -9,7 +9,7 @@ class Broadcasts : BroadcastReceiver() {
         val daemon = Intent(context, Daemon::class.java)
 
         when (intent?.action) {
-            Intent.ACTION_RUN ,
+//            Intent.ACTION_RUN ,
             Intent.ACTION_PACKAGE_CHANGED ,
                 -> context?.startService(daemon)
         }

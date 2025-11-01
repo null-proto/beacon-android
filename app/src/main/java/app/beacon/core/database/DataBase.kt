@@ -2,8 +2,10 @@ package app.beacon.core.database
 
 import androidx.room.Database
 import androidx.room.RoomDatabase
+import app.beacon.core.database.schema.DevInfo
+import app.beacon.core.database.schema.SecreteStore
 
-@Database(entities = [Registry::class], version = 1)
+@Database(entities = [ DevInfo::class , SecreteStore::class ], version = 2)
 abstract class DataBase : RoomDatabase() {
     abstract fun registry() : Registry
 }

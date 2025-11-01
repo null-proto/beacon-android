@@ -74,7 +74,7 @@ tasks.register("extractJarsFromAars") {
 tasks.register("printExtractedJarPaths") {
   doLast {
     val cp = configurations.named("debugRuntimeClasspath").get().resolve()
-    val outputDir = file("$buildDir/extracted-jars")
+    val outputDir = file("${layout.buildDirectory}/extracted-jars")
     outputDir.mkdirs()
 
     val extracted = cp
@@ -104,6 +104,8 @@ tasks.register("printJarPathsOnly") {
 
 
 dependencies {
+    implementation("androidx.work:work-runtime-ktx:2.9.0")
+
     implementation(libs.androidx.material3)
     implementation(libs.androidx.navigation.compose)
 

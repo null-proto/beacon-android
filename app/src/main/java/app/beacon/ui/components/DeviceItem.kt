@@ -34,6 +34,7 @@ import app.beacon.ui.theme.Typography
         modifier = Modifier.padding(paddingValues)
             .fillMaxWidth()
     ) {
+        throw RuntimeException("you cooked")
         Row(
             modifier = Modifier.fillMaxWidth()
                 .padding(horizontal = 16.dp, vertical = 8.dp),

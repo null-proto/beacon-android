@@ -31,7 +31,7 @@ import app.beacon.ui.theme.Typography
 
 
 @OptIn(ExperimentalMaterial3Api::class)
-@Composable fun SettingsActivityNavigator() {
+@Composable fun Settings() {
     val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior(rememberTopAppBarState())
     val navHostController = rememberNavController()
     val activity = LocalActivity.current

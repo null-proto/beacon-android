@@ -31,7 +31,7 @@ import app.beacon.ui.theme.Typography
 
 
 @OptIn(ExperimentalMaterial3Api::class)
-@Composable fun ControlTabActivityNavigator() {
+@Composable fun ControlTab() {
     val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior(rememberTopAppBarState())
     val navHostController = rememberNavController()
     val activity = LocalActivity.current

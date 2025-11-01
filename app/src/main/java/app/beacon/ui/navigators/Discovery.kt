@@ -28,7 +28,7 @@ import app.beacon.ui.theme.Typography
 import kotlin.jvm.java
 
 @OptIn(ExperimentalMaterial3Api::class)
-@Composable fun DiscoveryActivityNavigator() {
+@Composable fun Discovery() {
     val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior(rememberTopAppBarState())
     val navHostController = rememberNavController()
     val context = LocalContext.current

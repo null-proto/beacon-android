@@ -1,24 +1,26 @@
 package app.beacon.state
 
-import androidx.lifecycle.MutableLiveData
+import androidx.compose.runtime.mutableStateMapOf
 import androidx.lifecycle.ViewModel
 
 class StatelessDB : ViewModel() {
-    private val _mcast_db = MutableLiveData(mutableMapOf<String , String>())
+    private val _state = mutableStateMapOf<String , String>()
 
-    val inner = _mcast_db
+    val state = _state
 
     fun push(ip : String , name : String) {
-        _mcast_db.value?.put(ip , name)
-        _mcast_db.value = _mcast_db.value
+        _state.put(ip , name)
     }
 
     operator fun get(key: String) : String? {
-        return _mcast_db.value[key]
+        return _state[key]
+    }
+    operator fun set(key: String , value: String) {
+        _state.put(key,value)
     }
 
     fun clear() {
-        _mcast_db.value = mutableMapOf<String, String>()
+        _state.clear()
     }
 
 }

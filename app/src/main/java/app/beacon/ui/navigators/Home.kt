@@ -8,6 +8,10 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Radar
+import androidx.compose.material.icons.rounded.Menu
+import androidx.compose.material.icons.rounded.Radar
 import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
@@ -130,12 +134,7 @@ import kotlin.jvm.java
                             },
                             shape = RoundedCornerShape(25)
                         ) {
-                            Icon(
-                                painter = painterResource(
-                                    app.beacon.R.drawable.chart_no_axes_gantt
-                                ),
-                                contentDescription = null
-                            )
+                            Icon( Icons.Rounded.Menu , contentDescription = null )
                         }
                     },
                     actions = {
@@ -145,12 +144,7 @@ import kotlin.jvm.java
                                 context.startActivity(discoveryIntent)
                             }
                         ) {
-                            Icon(
-                                painter = painterResource(
-                                    app.beacon.R.drawable.radar
-                                ),
-                                contentDescription = null
-                            )
+                            Icon(Icons.Filled.Radar, contentDescription = "scan")
                         }
                     },
                     scrollBehavior = null

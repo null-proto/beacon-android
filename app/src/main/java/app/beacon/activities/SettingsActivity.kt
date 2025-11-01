@@ -5,7 +5,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.material3.ExperimentalMaterial3Api
-import app.beacon.ui.navigators.SettingsActivityNavigator
+import app.beacon.ui.navigators.Settings
 import app.beacon.ui.theme.BeaconTheme
 
 class SettingsActivity : ComponentActivity() {
@@ -16,7 +16,7 @@ class SettingsActivity : ComponentActivity() {
 
         setContent {
             BeaconTheme {
-                SettingsActivityNavigator()
+                Settings()
             }
         }
     }

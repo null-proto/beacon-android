@@ -7,6 +7,7 @@ import androidx.compose.material.icons.rounded.BugReport
 import androidx.compose.material.icons.rounded.FormatPaint
 import androidx.compose.material.icons.rounded.Settings
 import androidx.compose.material.icons.rounded.SettingsEthernet
+import androidx.compose.material.icons.rounded.Shield
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.navigation.NavHostController
 import app.beacon.R
@@ -19,6 +20,7 @@ enum class Settings:NavRouter {
     _Settings,
     Appearance,
     Network,
+    Permissions,
     Debug;
 
     override fun getName(): String {
@@ -38,11 +40,19 @@ enum class Settings:NavRouter {
                 context.getString(R.string.title_settings)
             }
 
+            Permissions -> {
+                context.getString(R.string.title_settings)
+            }
+
             Appearance -> {
                 context.getString(R.string.title_settings)
             }
 
             Debug -> {
+                context.getString(R.string.title_settings)
+            }
+
+            else -> {
                 context.getString(R.string.title_settings)
             }
         }
@@ -54,6 +64,7 @@ enum class Settings:NavRouter {
             Appearance -> Icons.Rounded.FormatPaint
             Debug -> Icons.Rounded.BugReport
             Network -> Icons.Rounded.SettingsEthernet
+            Permissions -> Icons.Rounded.Shield
             else -> Icons.Rounded.BrokenImage
         }
     }

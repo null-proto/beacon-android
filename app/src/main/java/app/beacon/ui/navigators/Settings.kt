@@ -27,6 +27,7 @@ import androidx.navigation.compose.rememberNavController
 import app.beacon.ui.fragments.settings.Appearance
 import app.beacon.ui.fragments.settings.Debug
 import app.beacon.ui.fragments.settings.Network
+import app.beacon.ui.fragments.settings.Permissions
 import app.beacon.ui.router.Settings
 import app.beacon.ui.theme.Typography
 import app.beacon.ui.fragments.settings.Settings as SettingsFrag
@@ -83,7 +84,8 @@ import app.beacon.ui.fragments.settings.Settings as SettingsFrag
             composable(Settings._Settings.name) { SettingsFrag(navHostController) }
             composable(Settings.Debug.name) { Debug() }
             composable(Settings.Appearance.name) { Appearance() }
-            composable(Settings.Network.name) { Network()}
+            composable(Settings.Network.name) { Network() }
+            composable(Settings.Permissions.name) { Permissions() }
 
         }
     }

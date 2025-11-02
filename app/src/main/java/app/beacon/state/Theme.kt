@@ -1,12 +1,11 @@
 package app.beacon.state
 
-import androidx.compose.runtime.mutableStateMapOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 
 object Theme : ViewModel() {
     var dynamicTheme =  mutableStateOf(false)
-    var colorMode =  mutableStateOf("system")
+    var mode =  mutableStateOf("system")
 
 //    private val _state = mutableStateMapOf<String , String>()
 //

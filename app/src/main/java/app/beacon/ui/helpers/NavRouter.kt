@@ -8,7 +8,7 @@ import androidx.navigation.NavHostController
  * 
  *
  *  this is a sample doc  */
-interface NavOptions {
+interface NavRouter {
     fun getName() : String
     fun getIcon() : ImageVector? { return null }
     fun getDescription(context: Context): String

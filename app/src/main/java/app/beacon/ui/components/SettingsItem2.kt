@@ -21,15 +21,14 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
-import androidx.navigation.navOptions
-import app.beacon.ui.helpers.NavOptions
-import app.beacon.ui.layouts.settings.MainLayout
+import app.beacon.ui.helpers.NavRouter
+import app.beacon.ui.router.Settings
 import app.beacon.ui.theme.Typography
 
 
 @Preview
 @Composable fun SettingsItem2(
-    navOptions: NavOptions = MainLayout.Settings,
+    navOptions: NavRouter = Settings._Settings,
     navHostController: NavHostController? = null,
     @DrawableRes id : Int = app.beacon.R.drawable.settings,
     paddingValues: PaddingValues = PaddingValues(0.dp),

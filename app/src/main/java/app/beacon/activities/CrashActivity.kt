@@ -13,6 +13,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Text
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.unit.sp
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowCompat
@@ -34,7 +35,7 @@ class CrashActivity: ComponentActivity() {
         setContent {
             BeaconTheme {
                 Column(modifier = Modifier.fillMaxSize()) {
-                    Text("FATAL", fontSize = 20.sp, modifier = Modifier.fillMaxWidth())
+                    Text(":( FATAL", fontSize = 20.sp, modifier = Modifier.fillMaxWidth() , fontFamily = FontFamily.Monospace)
                     Column(modifier = Modifier.fillMaxSize().verticalScroll(rememberScrollState())) {
                         Text(error)
                         Text(message)

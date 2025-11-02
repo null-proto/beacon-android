@@ -1,4 +1,4 @@
-package app.beacon.ui.layouts.settings
+package app.beacon.ui.fragments.settings
 
 import androidx.compose.runtime.Composable
 import app.beacon.ui.components.option.Item

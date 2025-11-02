@@ -11,7 +11,6 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Radar
 import androidx.compose.material.icons.rounded.Menu
-import androidx.compose.material.icons.rounded.Radar
 import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
@@ -30,7 +29,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextOverflow
@@ -40,7 +38,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import app.beacon.activities.DiscoveryActivity
 import app.beacon.activities.SettingsActivity
-import app.beacon.ui.layouts.HomeLayout
+import app.beacon.ui.fragments.Home
 import app.beacon.ui.theme.ManufacturingConsentRegular
 import app.beacon.ui.theme.Typography
 import kotlinx.coroutines.launch
@@ -159,7 +157,7 @@ import kotlin.jvm.java
                 modifier = Modifier.padding(innerPadding)
             ) {
                 composable("home") {
-                    HomeLayout()
+                    Home()
                 }
             }
 

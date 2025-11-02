@@ -1,4 +1,4 @@
-package app.beacon.ui.layouts
+package app.beacon.ui.fragments
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -14,10 +14,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import app.beacon.ui.components.DeviceItem
-import app.beacon.ui.components.SettingsItem
 
 @Preview
-@Composable fun ScanLayout(paddingValues: PaddingValues = PaddingValues(0.dp)) {
+@Composable fun Scan(paddingValues: PaddingValues = PaddingValues(0.dp)) {
     Box(
         modifier = Modifier.padding(paddingValues)
             .fillMaxSize()

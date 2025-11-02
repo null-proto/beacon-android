@@ -43,9 +43,9 @@ fun BeaconTheme(
         Context.MODE_PRIVATE)
 
     Theme.dynamicTheme.value = pref.getBoolean(Globals.PreferenceKeys.Theme.DYNAMIC_THEME , true)
-    Theme.colorMode.value = pref.getString(Globals.PreferenceKeys.Theme.APP_THEME , "system") ?: "system"
+    Theme.mode.value = pref.getString(Globals.PreferenceKeys.Theme.APP_THEME , "system") ?: "system"
 
-    val darkTheme = when (Theme.colorMode.value) {
+    val darkTheme = when (Theme.mode.value) {
         "light" -> false
         "dark" -> true
         else -> { isSystemInDarkTheme() }

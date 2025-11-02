@@ -1,4 +1,4 @@
-package app.beacon.ui.layouts.settings
+package app.beacon.ui.fragments.settings
 
 import android.content.Context
 import androidx.compose.foundation.layout.Column
@@ -20,7 +20,7 @@ fun Appearance(){
     val context = LocalContext.current
     val pref = context.getSharedPreferences(Globals.PreferenceKeys.Theme.NAME , Context.MODE_PRIVATE)
     val dynamicTheme = Theme.dynamicTheme.value
-    val theme = Theme.colorMode.value
+    val theme = Theme.mode.value
 
     Column(
         modifier = Modifier.verticalScroll(rememberScrollState())
@@ -47,7 +47,7 @@ fun Appearance(){
                 pref.edit(commit = true) {
                     putString(Globals.PreferenceKeys.Theme.APP_THEME , it)
                 }
-                Theme.colorMode.value = it
+                Theme.mode.value = it
             }
         )
     }

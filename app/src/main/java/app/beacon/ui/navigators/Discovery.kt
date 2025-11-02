@@ -22,7 +22,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.navigation.compose.rememberNavController
 import app.beacon.activities.SettingsActivity
-import app.beacon.ui.layouts.ScanLayout
+import app.beacon.ui.fragments.Scan
 import app.beacon.ui.theme.ManufacturingConsentRegular
 import app.beacon.ui.theme.Typography
 import kotlin.jvm.java
@@ -85,6 +85,6 @@ import kotlin.jvm.java
             )
         }
     ) { innerPadding ->
-        ScanLayout(paddingValues = innerPadding)
+        Scan(paddingValues = innerPadding)
     }
 }

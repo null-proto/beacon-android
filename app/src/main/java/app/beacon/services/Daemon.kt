@@ -36,6 +36,7 @@ class Daemon: Service() {
 
     override fun onDestroy() {
         Log.i("Services:Daemon:onDestroy","stop")
+        Globals.isDaemonRunning = false
         super.onDestroy()
     }
 

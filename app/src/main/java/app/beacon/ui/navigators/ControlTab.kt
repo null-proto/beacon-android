@@ -25,8 +25,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import app.beacon.ui.layouts.settings.DebugLayout
-import app.beacon.ui.layouts.settings.MainLayout
+import app.beacon.ui.fragments.settings.Debug
 import app.beacon.ui.theme.Typography
 
 
@@ -38,7 +37,7 @@ import app.beacon.ui.theme.Typography
     val activity = LocalActivity.current
     val navBackStackEntry by navHostController.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry?.destination?.route
-    val currentValue = MainLayout.entries.find { it.name == currentRoute } ?: MainLayout.Settings
+//    val currentValue = MainLayout.entries.find { it.name == currentRoute } ?: MainLayout.Settings
 
     // var currentValue  by remember {  mutableStateOf<MainLayout>(MainLayout.Settings) }
     Scaffold(
@@ -47,7 +46,7 @@ import app.beacon.ui.theme.Typography
             MediumTopAppBar(
                 title = {
                     Text(
-                        text = currentValue.name,
+                        text = "idk",
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis,
                         fontSize = Typography.displayMedium.fontSize,
@@ -80,13 +79,7 @@ import app.beacon.ui.theme.Typography
         }
     ) { innerPadding ->
 //        HomeLayout(innerPadding)
-        NavHost(navController = navHostController, startDestination = MainLayout.Settings.name , modifier = Modifier.padding(innerPadding)) {
-            composable(MainLayout.Settings.name) {
-                MainLayout.Compose(LocalContext.current,currentValue, navHostController)
-            }
-            composable(MainLayout.Debug.name) {
-                DebugLayout()
-            }
-        }
+//        NavHost(navController = navHostController, startDestination = MainLayout.Settings.name , modifier = Modifier.padding(innerPadding)) {
+//        }
     }
 }

@@ -31,6 +31,7 @@ import androidx.navigation.compose.rememberNavController
 import app.beacon.ui.layouts.settings.Appearance
 import app.beacon.ui.layouts.settings.DebugLayout
 import app.beacon.ui.layouts.settings.MainLayout
+import app.beacon.ui.layouts.settings.Network
 import app.beacon.ui.theme.Typography
 
 
@@ -90,6 +91,11 @@ import app.beacon.ui.theme.Typography
 
             composable(MainLayout.Appearance.name) {
                 Appearance()
+            }
+
+
+            composable(MainLayout.Network.name) {
+                Network()
             }
         }
     }

@@ -13,6 +13,7 @@ import androidx.compose.material.icons.rounded.BrokenImage
 import androidx.compose.material.icons.rounded.BugReport
 import androidx.compose.material.icons.rounded.FormatPaint
 import androidx.compose.material.icons.rounded.Settings
+import androidx.compose.material.icons.rounded.SettingsEthernet
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -31,6 +32,7 @@ enum class MainLayout: NavOptions {
 
     Settings,
     Appearance,
+    Network,
     Debug;
 
     override fun getName(): String {
@@ -40,6 +42,10 @@ enum class MainLayout: NavOptions {
     override fun getDescription(context: Context): String {
         return when (this) {
             Settings -> {
+                context.getString(R.string.title_settings)
+            }
+
+            Network -> {
                 context.getString(R.string.title_settings)
             }
 
@@ -58,6 +64,7 @@ enum class MainLayout: NavOptions {
             Settings -> Icons.Rounded.Settings
             Appearance -> Icons.Rounded.FormatPaint
             Debug -> Icons.Rounded.BugReport
+            Network -> Icons.Rounded.SettingsEthernet
             else -> Icons.Rounded.BrokenImage
         }
     }
@@ -67,13 +74,9 @@ enum class MainLayout: NavOptions {
             Settings -> {
                 // Cannot reach
             }
-
-            Appearance -> {
-                navHostController?.navigate(Appearance.name)
-            }
-
-            Debug -> {
-                navHostController?.navigate(Debug.name)
+            
+            else -> {
+                navHostController?.navigate(this.name)
             }
         }
     }

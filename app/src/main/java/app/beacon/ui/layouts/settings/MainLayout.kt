@@ -36,7 +36,9 @@ enum class MainLayout: NavOptions {
     Debug;
 
     override fun getName(): String {
-        return this.name
+        return when(this) {
+            else -> this.name
+        }
     }
 
     override fun getDescription(context: Context): String {
@@ -74,7 +76,7 @@ enum class MainLayout: NavOptions {
             Settings -> {
                 // Cannot reach
             }
-            
+
             else -> {
                 navHostController?.navigate(this.name)
             }

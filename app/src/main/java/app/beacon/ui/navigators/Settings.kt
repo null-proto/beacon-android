@@ -38,7 +38,7 @@ import app.beacon.ui.theme.Typography
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable fun Settings() {
-    val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior(rememberTopAppBarState())
+//    val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior(rememberTopAppBarState())
     val navHostController = rememberNavController()
     val activity = LocalActivity.current
     val navBackStackEntry by navHostController.currentBackStackEntryAsState()
@@ -85,18 +85,10 @@ import app.beacon.ui.theme.Typography
             composable(MainLayout.Settings.name) {
                 MainLayout.Compose(context = LocalContext.current,currentValue, navHostController)
             }
-            composable(MainLayout.Debug.name) {
-                DebugLayout()
-            }
 
-            composable(MainLayout.Appearance.name) {
-                Appearance()
-            }
-
-
-            composable(MainLayout.Network.name) {
-                Network()
-            }
+            composable(MainLayout.Debug.name) { DebugLayout() }
+            composable(MainLayout.Appearance.name) { Appearance() }
+            composable(MainLayout.Network.name) { Network()}
         }
     }
 }

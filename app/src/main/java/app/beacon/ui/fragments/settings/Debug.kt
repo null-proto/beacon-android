@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.rounded.Pause
 import androidx.compose.material.icons.rounded.PlayArrow
 import androidx.compose.material.icons.rounded.RestartAlt
 import androidx.compose.runtime.Composable
@@ -46,6 +47,16 @@ import java.util.concurrent.TimeUnit
                 )
 
                 Toast.makeText(context, "StartDaemon is polled", Toast.LENGTH_SHORT).show()
+            }
+        )
+
+        Item(
+            name = "Kill Daemon",
+            description = "Stop daemon if running",
+            icon = Icons.Rounded.Pause,
+            onClick = {
+                context.stopService(daemon)
+                Toast.makeText(context, "StartDaemon stopped", Toast.LENGTH_SHORT).show()
             }
         )
 

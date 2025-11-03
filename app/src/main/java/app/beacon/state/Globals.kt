@@ -21,6 +21,7 @@ data object Globals {
             var port : Int = 4800
             var ip : String = "::"
             var timeout : Int = 5000
+            var interfaces : Set<String> = setOf()
         }
     }
 
@@ -38,6 +39,8 @@ data object Globals {
         RuntimeConfig.Network.port = pref.getInt(PreferenceKeys.Network.DAEMON_PORT, RuntimeConfig.Network.port)
         RuntimeConfig.Network.timeout = pref.getInt(PreferenceKeys.Network.DAEMON_NET_TIMEOUT, RuntimeConfig.Network.timeout)
         RuntimeConfig.Network.ip = pref.getString(PreferenceKeys.Network.DAEMON_BIND_IP, RuntimeConfig.Network.ip) ?: RuntimeConfig.Network.ip
+        RuntimeConfig.Network.interfaces = pref.getStringSet(PreferenceKeys.Network.INTERFACES,
+            RuntimeConfig.Network.interfaces ) ?: setOf<String>()
     }
     fun generateNewInf(context: Context) : Inf {
         val preUuid = context.getSharedPreferences(PreferenceKeys.Self.NAME, Context.MODE_PRIVATE)
@@ -86,6 +89,8 @@ data object Globals {
             const val DAEMON_BIND_IP = "daemon-ip"
 
             const val DAEMON_NET_TIMEOUT = "daemon-net-timeout"
+
+            const val INTERFACES = "bind-interface"
         }
 
         object Theme {

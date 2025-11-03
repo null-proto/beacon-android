@@ -15,7 +15,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.style.TextOverflow
@@ -26,8 +25,9 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import app.beacon.ui.fragments.settings.Appearance
 import app.beacon.ui.fragments.settings.Debug
-import app.beacon.ui.fragments.settings.Network
+import app.beacon.ui.fragments.settings.network.Network
 import app.beacon.ui.fragments.settings.Permissions
+import app.beacon.ui.fragments.settings.network.Interface
 import app.beacon.ui.router.Settings
 import app.beacon.ui.theme.Typography
 import app.beacon.ui.fragments.settings.Settings as SettingsFrag
@@ -84,8 +84,9 @@ import app.beacon.ui.fragments.settings.Settings as SettingsFrag
             composable(Settings._Settings.name) { SettingsFrag(navHostController) }
             composable(Settings.Debug.name) { Debug() }
             composable(Settings.Appearance.name) { Appearance() }
-            composable(Settings.Network.name) { Network() }
+            composable(Settings.Network.name) { Network(navHostController) }
             composable(Settings.Permissions.name) { Permissions() }
+            composable(Settings._NetworkInterface.name) { Interface() }
 
         }
     }

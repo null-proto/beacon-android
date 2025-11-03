@@ -20,12 +20,14 @@ enum class Settings:NavRouter {
     _Settings,
     Appearance,
     Network,
+    _NetworkInterface,
     Permissions,
     Debug;
 
     override fun getName(): String {
         return when(this) {
             _Settings -> "Settings"
+            _NetworkInterface -> "Select Interface"
             else -> this.name
         }
     }

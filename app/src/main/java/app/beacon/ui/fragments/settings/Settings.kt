@@ -31,7 +31,7 @@ import app.beacon.ui.router.Settings._Settings
     ) {
         LazyColumn(modifier = Modifier.fillMaxSize()) {
             items(Settings.entries) {
-                if (it != _Settings) {
+                if (!it.name.startsWith('_')) {
                     Item(
                         name = it.getName(),
                         description = it.getDescription(context),

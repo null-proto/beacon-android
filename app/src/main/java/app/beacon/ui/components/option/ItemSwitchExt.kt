@@ -1,5 +1,6 @@
 package app.beacon.ui.components.option
 
+import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -8,6 +9,8 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Room
 import androidx.compose.material3.Icon
@@ -29,7 +32,7 @@ import androidx.compose.ui.unit.dp
 import app.beacon.ui.theme.Typography
 
 @Preview
-@Composable fun ItemSwitch(
+@Composable fun ItemSwitchExt(
     name : String = "Sample Item",
     description : String = "A item with switch",
     onClick : ()->Unit = {},
@@ -49,7 +52,7 @@ import app.beacon.ui.theme.Typography
             modifier = Modifier.fillMaxWidth()
                 .padding(vertical = 8.dp)
                 .padding(horizontal = 16.dp, vertical = 8.dp),
-            verticalAlignment = Alignment.CenterVertically,
+            verticalAlignment = Alignment.Top,
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
             if (icon!=null) Box( contentAlignment = Alignment.Center ) {
@@ -63,7 +66,7 @@ import app.beacon.ui.theme.Typography
                 )
             }
 
-            Column( modifier = Modifier.weight(1f) .padding(vertical = 4.dp) ) {
+            Column( modifier = Modifier.padding(vertical = 4.dp) ) {
                 Text(
                     name,
                     fontSize = Typography.titleMedium.fontSize,
@@ -74,10 +77,8 @@ import app.beacon.ui.theme.Typography
                 Text(
                     description,
                     fontSize = Typography.bodyMedium.fontSize,
-                    maxLines = 1,
-                    overflow = TextOverflow.Ellipsis,
-
                     modifier = Modifier.graphicsLayer(alpha = 0.5f)
+                        .horizontalScroll(rememberScrollState())
                         .padding(1.dp)
                 )
             }

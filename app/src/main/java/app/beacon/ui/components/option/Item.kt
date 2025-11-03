@@ -64,7 +64,7 @@ import app.beacon.ui.theme.Typography
                     description,
                     fontSize = Typography.bodyMedium.fontSize,
                     maxLines = 1,
-                    overflow = TextOverflow.Clip,
+                    overflow = TextOverflow.Ellipsis,
 
                     modifier = Modifier.graphicsLayer(alpha = 0.5f)
                         .padding(1.dp)

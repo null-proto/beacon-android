@@ -24,7 +24,7 @@ import app.beacon.ui.helpers.checkPermission
 @Composable fun Permissions() {
     val context = LocalContext.current
     val activity = LocalActivity.current
-    var toggled by remember { mutableStateOf(checkPermission(context , Manifest.permission.POST_NOTIFICATIONS)) }
+    var postNotification by remember { mutableStateOf(checkPermission(context , Manifest.permission.POST_NOTIFICATIONS)) }
 
     Column( modifier = Modifier.verticalScroll(rememberScrollState()) ) {
 
@@ -39,17 +39,15 @@ import app.beacon.ui.helpers.checkPermission
             }
         )
 
-
-
         ItemSwitch(
             name = "Notification",
             description = "Open notification permission",
-            toggled = toggled,
+            toggled = postNotification,
             disabled = true,
             onClick = {
                 if (activity != null) {
-                    Log.d("PermissionFragment" , "requesting notification permission , perm:$toggled")
-                    if (toggled) {
+                    Log.d("PermissionFragment" , "requesting notification permission , perm:$postNotification")
+                    if (postNotification) {
                         val intent = Intent(Settings.ACTION_APP_NOTIFICATION_SETTINGS).apply {
                             putExtra(Settings.EXTRA_APP_PACKAGE, context.packageName)
                         }
@@ -62,7 +60,7 @@ import app.beacon.ui.helpers.checkPermission
                         )
                     }
 
-                    toggled = checkPermission(context , Manifest.permission.POST_NOTIFICATIONS)
+                    postNotification = checkPermission(context , Manifest.permission.POST_NOTIFICATIONS)
                 }else {
                     Log.e("PermissionFragment" , "failed to request permission")
                 }

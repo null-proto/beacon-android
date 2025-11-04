@@ -2,6 +2,7 @@ package app.beacon.activities
 
 import android.app.Application
 import android.content.Intent
+import androidx.work.ListenableWorker
 import java.util.concurrent.TimeUnit
 import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkManager
@@ -31,9 +32,6 @@ class Beacon : Application() {
                 .setInitialDelay(5 , TimeUnit.SECONDS )
                 .build()
         )
-
-        var rt = CoroutineScope(Dispatchers.IO)
-        val session = Session(context = this, rt = rt)
 
     }
 }

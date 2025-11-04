@@ -19,9 +19,9 @@ data class Frame(
         companion object Static {
             fun parse(data : UByteArray) : Header {
                 val size =
-                    ((data[0].toUInt() shl 24) or (data[1].toUInt() shl 16) or (data[2].toUInt() shl 8) or (data[3].toUInt()))
+                    ((data[3].toUInt() shl 24) or (data[2].toUInt() shl 16) or (data[1].toUInt() shl 8) or (data[0].toUInt()))
                 val type =
-                    ((data[4].toUInt() shl 24) or (data[5].toUInt() shl 16) or (data[6].toUInt() shl 8) or (data[7].toUInt()))
+                    ((data[7].toUInt() shl 24) or (data[6].toUInt() shl 16) or (data[5].toUInt() shl 8) or (data[4].toUInt()))
                 return Header(
                     size = size,
                     type = type

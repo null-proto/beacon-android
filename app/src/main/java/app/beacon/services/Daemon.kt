@@ -13,20 +13,33 @@ import app.beacon.state.Globals.Notification
 import app.beacon.state.Session
 import app.beacon.ui.helpers.CrashHandler
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.cancel
 import kotlinx.coroutines.launch
 
 class Daemon: Service() {
+    var supervisorJob = SupervisorJob()
+    val serviceScope = CoroutineScope(Dispatchers.IO + supervisorJob )
+    lateinit var session : Session
+
+    @OptIn(DelicateCoroutinesApi::class)
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         Log.i("Services:Daemon:onStartCommand","with startID:$startId")
-        Thread.setDefaultUncaughtExceptionHandler(CrashHandler(this))
+        serviceScope.launch {
+            session.enter()
+        }
         return START_STICKY
     }
 
     override fun onCreate() {
-        Log.i("Services:Daemon:onCreate","start")
+        Log.i("Services:Daemon:onCreate","starting daemon")
         super.onCreate()
         startForeground(1 , makeNotification())
+        session = Session( applicationContext , serviceScope )
         Globals.isDaemonRunning = true
     }
 
@@ -35,8 +48,10 @@ class Daemon: Service() {
     }
 
     override fun onDestroy() {
-        Log.i("Services:Daemon:onDestroy","stop")
+        Log.i("Services:Daemon:onDestroy","daemon stopped")
+        session.exit()
         Globals.isDaemonRunning = false
+        serviceScope.cancel()
         super.onDestroy()
     }
 

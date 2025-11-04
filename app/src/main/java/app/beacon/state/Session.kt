@@ -21,6 +21,7 @@ import app.beacon.core.routes.Router
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.launch
 import java.net.NetworkInterface
@@ -56,7 +57,7 @@ class Session(val context: Context , val rt : CoroutineScope) {
         else Log.w("Session" , "failed to route")
     }
 
-    fun start() {
+    fun enter() {
         rt.launch {
             while (true) {
                 val client = service.listen();

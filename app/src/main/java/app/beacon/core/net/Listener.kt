@@ -12,6 +12,7 @@ import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.launch
 import java.net.InetAddress
+import java.net.InetSocketAddress
 import java.net.ServerSocket
 import java.net.Socket
 import java.net.SocketAddress
@@ -22,16 +23,18 @@ import java.nio.channels.SocketChannel
 
 @OptIn(ExperimentalUnsignedTypes::class)
 class Listener() {
-//    val socket = ServerSocket(Globals.RuntimeConfig.Network.port , 30 ,InetAddress.getByName(Globals.RuntimeConfig.Network.ip))
-    val socket = ServerSocket(Globals.RuntimeConfig.Network.port)
-
-    init {
-//        socket.soTimeout = Globals.RuntimeConfig.Network.timeout
-        Log.i("Listener", "Socket binds on ${socket.inetAddress} , ${socket.localPort} ")
-        Log.i("Listener", "Socket binds on ${socket.localSocketAddress} // ${socket.inetAddress} ")
-    }
+    val socket = ServerSocket()
 
     fun listen() : Socket {
         return socket.accept()
+    }
+
+    init {
+//        socket.soTimeout = Globals.RuntimeConfig.Network.timeout
+        socket.reuseAddress = true
+        socket.bind(InetSocketAddress(Globals.RuntimeConfig.Network.ip,Globals.RuntimeConfig.Network.port))
+
+        Log.i("Listener", "Socket binds on ${socket.inetAddress} , ${socket.localPort} ")
+        Log.i("Listener", "Socket binds on ${socket.localSocketAddress} // ${socket.inetAddress} ")
     }
 }

@@ -29,11 +29,13 @@ import app.beacon.ui.theme.Typography
     onClick : ()->Unit = {},
     paddingValues: PaddingValues = PaddingValues(0.dp),
     icon : ImageVector? = null,
+    disabled : Boolean = false
 ) {
     Surface(
-        onClick = onClick,
+        onClick = if (disabled) {{}} else onClick,
         modifier = Modifier.padding(paddingValues)
             .fillMaxWidth()
+            .graphicsLayer(alpha =  if (disabled) 0.5f else 1f)
     ) {
         Row(
             modifier = Modifier.fillMaxWidth()

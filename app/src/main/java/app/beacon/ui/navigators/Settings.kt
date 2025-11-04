@@ -1,6 +1,8 @@
 package app.beacon.ui.navigators
 
 import androidx.activity.compose.LocalActivity
+import androidx.compose.animation.slideInHorizontally
+import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -79,7 +81,15 @@ import app.beacon.ui.fragments.settings.Settings as SettingsFrag
         }
     ) { innerPadding ->
 //        HomeLayout(innerPadding)
-        NavHost(navController = navHostController, startDestination = Settings._Settings.name , modifier = Modifier.padding(innerPadding)) {
+        NavHost(
+            navController = navHostController,
+            startDestination = Settings._Settings.name ,
+            modifier = Modifier.padding(innerPadding),
+            enterTransition = { slideInHorizontally { it } },
+            exitTransition =  { slideOutHorizontally { -it } },
+            popExitTransition = { slideOutHorizontally { it } },
+            popEnterTransition = { slideInHorizontally { -it } }
+        ) {
 
             composable(Settings._Settings.name) { SettingsFrag(navHostController) }
             composable(Settings.Debug.name) { Debug() }

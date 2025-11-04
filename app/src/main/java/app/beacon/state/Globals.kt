@@ -3,8 +3,6 @@
 package app.beacon.state
 
 import android.content.Context
-import androidx.compose.ui.graphics.vector.VectorConfig
-import kotlin.math.cosh
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
 
@@ -39,7 +37,7 @@ data object Globals {
         RuntimeConfig.Network.port = pref.getInt(PreferenceKeys.Network.DAEMON_PORT, RuntimeConfig.Network.port)
         RuntimeConfig.Network.timeout = pref.getInt(PreferenceKeys.Network.DAEMON_NET_TIMEOUT, RuntimeConfig.Network.timeout)
         RuntimeConfig.Network.ip = pref.getString(PreferenceKeys.Network.DAEMON_BIND_IP, RuntimeConfig.Network.ip) ?: RuntimeConfig.Network.ip
-        RuntimeConfig.Network.interfaces = pref.getStringSet(PreferenceKeys.Network.INTERFACES,
+        RuntimeConfig.Network.interfaces = pref.getStringSet(PreferenceKeys.Network.DISCOVER_IPV6_MULTICAST_INTERFACES,
             RuntimeConfig.Network.interfaces ) ?: setOf<String>()
     }
     fun generateNewInf(context: Context) : Inf {
@@ -84,13 +82,23 @@ data object Globals {
         object Network {
             const val NAME = "network-pref"
 
+            // Main Service
+
             const val DAEMON_PORT = "daemon-port"
 
             const val DAEMON_BIND_IP = "daemon-ip"
 
             const val DAEMON_NET_TIMEOUT = "daemon-net-timeout"
 
-            const val INTERFACES = "bind-interface"
+
+            // DISCOVER Protocol
+            const val DISCOVER_IPV6_MULTICASTING = "discover-1"
+
+            const val DISCOVER_IPV4_BROADCAST = "discover-2"
+
+            const val DISCOVER_DAEMON = "discover-3"
+
+            const val DISCOVER_IPV6_MULTICAST_INTERFACES = "bind-interface"
         }
 
         object Theme {

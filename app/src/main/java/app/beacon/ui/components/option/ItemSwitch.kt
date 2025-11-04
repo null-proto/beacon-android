@@ -8,8 +8,6 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.rounded.Room
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Switch
@@ -30,14 +28,14 @@ import app.beacon.ui.theme.Typography
 
 @Preview
 @Composable fun ItemSwitch(
-    name : String = "Sample Item",
-    description : String = "A item with switch",
-    onClick : ()->Unit = {},
-    toggled : Boolean = false,
-    disabled : Boolean = false,
-    onToggle : (Boolean)-> Boolean = { false },
+    name: String = "Sample Item",
+    description: String = "A item with switch",
+    onClick: () -> Unit = {},
+    toggled: Boolean = false,
+    disabled: Boolean = false,
+    onToggle: (Boolean) -> Boolean = { false },
     paddingValues: PaddingValues = PaddingValues(0.dp),
-    icon : ImageVector? = null,
+    icon: ImageVector? = null,
 ) {
     var checked by remember { mutableStateOf(toggled) }
     Surface(

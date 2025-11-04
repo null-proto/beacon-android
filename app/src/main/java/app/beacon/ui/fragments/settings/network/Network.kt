@@ -10,6 +10,8 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Close
 import androidx.compose.material.icons.rounded.Edit
+import androidx.compose.material.icons.rounded.Route
+import androidx.compose.material.icons.rounded.Router
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -34,6 +36,7 @@ import androidx.core.content.edit
 import androidx.navigation.NavController
 import app.beacon.state.Globals
 import app.beacon.ui.components.option.Item
+import app.beacon.ui.components.option.ItemSwitch
 import app.beacon.ui.router.Settings
 
 @Composable fun Network(navController: NavController) {
@@ -44,17 +47,56 @@ import app.beacon.ui.router.Settings
     val servicePortFocusRequest = remember { FocusRequester() }
     val serviceHostFocusRequest = remember { FocusRequester() }
     val serviceTimeoutFocusRequest = remember { FocusRequester() }
-    var servicePort by remember { mutableStateOf(pref.getInt(PreferenceKeys.Network.DAEMON_PORT , Globals.RuntimeConfig.Network.port ).toString()) }
-    var serviceHost by remember { mutableStateOf(pref.getString(PreferenceKeys.Network.DAEMON_BIND_IP ,
-        Globals.RuntimeConfig.Network.ip )?: "automatic") }
-    var serviceTimeout by remember { mutableStateOf(pref.getInt(PreferenceKeys.Network.DAEMON_NET_TIMEOUT , Globals.RuntimeConfig.Network.timeout ).toString()) }
+    var servicePort by remember {
+        mutableStateOf(
+            pref.getInt(
+                PreferenceKeys.Network.DAEMON_PORT,
+                Globals.RuntimeConfig.Network.port
+            ).toString()
+        )
+    }
+    var serviceHost by remember {
+        mutableStateOf(
+            pref.getString(
+                PreferenceKeys.Network.DAEMON_BIND_IP,
+                Globals.RuntimeConfig.Network.ip
+            ) ?: "automatic"
+        )
+    }
+    var serviceTimeout by remember {
+        mutableStateOf(
+            pref.getInt(
+                PreferenceKeys.Network.DAEMON_NET_TIMEOUT,
+                Globals.RuntimeConfig.Network.timeout
+            ).toString()
+        )
+    }
     var editPort by remember { mutableStateOf(false) }
     var editHost by remember { mutableStateOf(false) }
     var editTimeout by remember { mutableStateOf(false) }
+    var enableMulticast by remember { mutableStateOf(false) }
 
     var buffer = ""
 
     Column(modifier = Modifier.verticalScroll(rememberScrollState())) {
+
+        ItemSwitch(
+            name = "Multicasting",
+            description = "Enable or disable IPv6 multicasting",
+            icon = Icons.Rounded.Route,
+            onToggle = {
+                enableMulticast = it
+                it
+            }
+        )
+
+        Item(
+            name = "Multicasting Interface",
+            description = "Select network interface to use multicasting",
+            icon = Icons.Rounded.Router,
+            onClick = { navController.navigate(Settings._NetworkInterface.name) },
+            disabled = !enableMulticast,
+        )
 
         ItemContainer(
             name = "Port number",
@@ -67,7 +109,10 @@ import app.beacon.ui.router.Settings
                 label = { Text("Port") },
                 placeholder = { Text("between 1025-65536") },
                 enabled = editPort,
-                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number, imeAction = ImeAction.Done),
+                keyboardOptions = KeyboardOptions(
+                    keyboardType = KeyboardType.Number,
+                    imeAction = ImeAction.Done
+                ),
                 keyboardActions = KeyboardActions(onDone = {
                     pref.edit { putInt(PreferenceKeys.Network.DAEMON_PORT, servicePort.toInt()) }
                     servicePortFocusRequest.freeFocus()
@@ -90,7 +135,11 @@ import app.beacon.ui.router.Settings
                             servicePortFocusRequest.freeFocus()
                             editPort = false
                         }) {
-                            Icon(Icons.Rounded.Close, contentDescription = null, tint = Color.Red.copy(alpha = 0.4f))
+                            Icon(
+                                Icons.Rounded.Close,
+                                contentDescription = null,
+                                tint = Color.Red.copy(alpha = 0.4f)
+                            )
                         }
                     }
                 }
@@ -174,8 +223,7 @@ import app.beacon.ui.router.Settings
                     if (!editTimeout) {
                         IconButton(onClick = {
                             editTimeout = true;
-                            buffer = servicePort;
-                            serviceTimeoutFocusRequest.captureFocus()
+                            buffer = serviceTimeout;
                             serviceTimeoutFocusRequest.requestFocus()
                             keyboard?.show()
                         }) {
@@ -198,10 +246,5 @@ import app.beacon.ui.router.Settings
             )
         }
 
-        Item(
-            name = "Network Interface",
-            description = "Select network interface to use",
-            onClick = { navController.navigate(Settings._NetworkInterface.name) }
-        )
     }
 }

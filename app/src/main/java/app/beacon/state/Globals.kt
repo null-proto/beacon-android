@@ -70,6 +70,12 @@ data object Globals {
             const val TITLE = "Daemon is running"
             const val DESCRIPTION = ""
         }
+
+        object OpenChannel {
+            const val CATEGORY = "ping"
+            const val ID = "ping"
+            const val NAME = "Ping"
+        }
     }
 
     object PreferenceKeys {

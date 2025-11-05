@@ -61,8 +61,15 @@ class Daemon: Service() {
             Notification.MainChannelDaemon.NAME,
             NotificationManager.IMPORTANCE_NONE
         )
+        val openChannel = NotificationChannel(
+            Globals.Notification.OpenChannel.ID,
+            Globals.Notification.OpenChannel.CATEGORY,
+            NotificationManager.IMPORTANCE_DEFAULT
+        )
+
         val nm = getSystemService(NOTIFICATION_SERVICE) as NotificationManager
         nm.createNotificationChannel(channel)
+        nm.createNotificationChannel(openChannel)
 
         return NotificationCompat.Builder(this , Notification.MainChannelDaemon.ID)
             .setContentTitle(Notification.MainChannelDaemon.TITLE)

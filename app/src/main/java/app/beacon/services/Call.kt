@@ -28,6 +28,7 @@ import kotlin.text.toInt
 class Call:  Service() {
     var ringtone: Ringtone? = null
     var vibrator: VibratorManager? = null
+    val nid = (1..10000).random().hashCode()
 
     override fun onBind(intent: Intent?): IBinder? {
         return null
@@ -39,7 +40,10 @@ class Call:  Service() {
                 Log.i("Call" , "Call Ended")
                 ringtone?.stop()
                 vibrator?.defaultVibrator?.cancel()
-                stopForeground(STOP_FOREGROUND_DETACH)
+                stopForeground(STOP_FOREGROUND_REMOVE)
+
+                (getSystemService(NOTIFICATION_SERVICE) as NotificationManager).cancel(nid)
+
                 stopSelf()
             }
 
@@ -48,13 +52,13 @@ class Call:  Service() {
                 val title = intent?.getStringExtra("title")
                 val name = intent?.getStringExtra("name")
 
-                val ringIntent = Intent(this , Call::class.java).apply {
+                val call = Intent(this , Call::class.java).apply {
                     putExtra("title" , title)
                     putExtra("name" , name)
-                    setFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
                 }
+                call.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP
 
-                startActivity(ringIntent)
+                startActivity(call)
 
                 val uri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_RINGTONE)
                 ringtone = RingtoneManager.getRingtone(this,uri)
@@ -63,7 +67,7 @@ class Call:  Service() {
                 val vibEffect = VibrationEffect.createWaveform(longArrayOf(0,800,400,800,400,1000),intArrayOf(0,255,0,255,0,255) , 0)
                 ringtone?.play()
                 vibrator?.defaultVibrator?.vibrate(vibEffect)
-                startForeground(1 , makeNotification(title,name))
+                startForeground(nid , makeNotification(title,name))
             }
         }
 
@@ -88,9 +92,18 @@ class Call:  Service() {
         ringIntent.putExtra("name" , name)
         ringIntent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP
 
+        val stopCall = Intent(this , app.beacon.services.Call::class.java).apply {
+            action = "STOP_CALL"
+        }
+
         val pending = PendingIntent.getActivity(
             this,0,ringIntent, PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
         )
+
+        val pendingStopCall = PendingIntent.getActivity(
+            this,0,stopCall, PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+        )
+
         return NotificationCompat.Builder(
             this,
             Globals.Notification.CallChannel.ID
@@ -103,6 +116,11 @@ class Call:  Service() {
             .setCategory(NotificationCompat.CATEGORY_CALL)
             .setOngoing(true)
             .setSilent(true)
+            .addAction(
+                android.R.drawable.ic_menu_close_clear_cancel,
+                "Decline",
+                pendingStopCall
+            )
             .build()
 
     }

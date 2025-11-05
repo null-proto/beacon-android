@@ -2,6 +2,8 @@ package app.beacon.activities
 
 import android.content.Intent
 import android.os.Bundle
+import android.view.WindowInsetsController
+import android.view.WindowManager
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
@@ -26,6 +28,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.view.WindowCompat
+import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.WindowInsetsControllerCompat
 import app.beacon.services.Call
 import app.beacon.ui.theme.BeaconTheme
 
@@ -33,6 +38,18 @@ class Call: ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
+        window.addFlags(
+            WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD or
+            WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED or
+            WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON or
+            WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON
+        )
+
+        WindowCompat.setDecorFitsSystemWindows(window,false)
+        WindowInsetsControllerCompat(window,window.decorView).let { ctrlr ->
+            ctrlr.hide(WindowInsetsCompat.Type.statusBars() or WindowInsetsCompat.Type.navigationBars())
+            ctrlr.systemBarsBehavior = WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
+        }
 
 //        val uri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_RINGTONE)
 //        val ringtone = RingtoneManager.getRingtone(this,uri)

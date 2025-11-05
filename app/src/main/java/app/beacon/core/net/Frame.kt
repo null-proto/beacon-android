@@ -96,6 +96,19 @@ data class Frame(
         return Bin(data = data)
     }
 
+    fun serialize() : ByteArray {
+        return byteArrayOf(
+            (header.size and 0xFFu).toByte(),
+            ((header.size shr 8) and 0xFFu).toByte(),
+            ((header.size shr 16)and 0xFFu).toByte(),
+            ((header.size shr 24)and 0xFFu).toByte(),
+            (header.type and 0xFFu).toByte(),
+            ((header.type shr 8) and 0xFFu).toByte(),
+            ((header.type shr 16) and 0xFFu).toByte(),
+            ((header.type shr 24) and 0xFFu).toByte()
+        ) + data
+    }
+
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (javaClass != other?.javaClass) return false

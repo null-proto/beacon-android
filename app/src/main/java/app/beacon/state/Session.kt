@@ -21,9 +21,11 @@ import app.beacon.core.routes.Router
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.launch
+import java.net.InetAddress
 import java.net.InetSocketAddress
 import java.net.NetworkInterface
 import java.net.SocketException
@@ -44,10 +46,14 @@ class Session(val context: Context , val rt : CoroutineScope) {
         val context: Context,
     )
 
-    suspend fun attach(frame: Frame) {
+    suspend fun attach(frame: Frame , ip : InetAddress , port : Int , localIp : InetAddress , localPort : Int) : Frame? {
         val kv = frame.getKv()
-        if (kv!=null) router.route(Args(state , kv = kv))
-        else Log.w("Session" , "failed to route")
+        return if (kv!=null)
+            router.route(Args(state , kv = kv , ip = ip , port = port , localIp = localIp , localPort = localPort))
+        else {
+            Log.w("Session", "failed to route")
+            null
+        }
     }
 
     fun enter() {
@@ -58,13 +64,19 @@ class Session(val context: Context , val rt : CoroutineScope) {
                 client.soTimeout = Globals.RuntimeConfig.Network.timeout
                 rt.launch {
                     try {
+                        val port = client.port
+                        val localPort = client.localPort
+                        val ip = client.inetAddress
+                        val localIp = client.localAddress
                         while (!client.isClosed) {
                             val fm =
                                 client.inputStream.readNBytes(8).map { it.toUByte() }.toUByteArray()
                             val header = Frame.Header.parse(fm)
                             val data = client.inputStream.readNBytes(header.size.toInt())
                             val frame = Frame(header = header, data = data)
-                            attach(frame)
+
+                            val res = attach(frame ,ip , port , localIp , localPort)
+                            if (res!=null) client.outputStream.write(res.serialize())
                         }
 
                     } catch (e : SocketException) {

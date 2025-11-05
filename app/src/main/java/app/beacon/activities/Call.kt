@@ -38,6 +38,8 @@ class Call: ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
+        setShowWhenLocked(true)
+        setTurnScreenOn(true)
         window.addFlags(
             WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD or
             WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED or

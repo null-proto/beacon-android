@@ -79,14 +79,6 @@ class Call:  Service() {
     }
 
     private fun makeNotification(title: String? , name : String?) : Notification {
-        val callChannel = NotificationChannel(
-            Globals.Notification.CallChannel.ID,
-            Globals.Notification.CallChannel.CATEGORY,
-            NotificationManager.IMPORTANCE_HIGH
-        )
-        val nm = getSystemService(NOTIFICATION_SERVICE) as NotificationManager
-        nm.createNotificationChannel(callChannel)
-
         val ringIntent = Intent(this , Call::class.java)
         ringIntent.putExtra("title" , title)
         ringIntent.putExtra("name" , name)

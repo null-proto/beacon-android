@@ -22,7 +22,7 @@ import java.nio.channels.AsynchronousServerSocketChannel
 import java.nio.channels.SocketChannel
 
 @OptIn(ExperimentalUnsignedTypes::class)
-class Listener() {
+class Listener(address : InetSocketAddress = InetSocketAddress(Globals.RuntimeConfig.Network.ip,0)) {
     val socket = ServerSocket()
 
     fun listen() : Socket {
@@ -32,7 +32,7 @@ class Listener() {
     init {
 //        socket.soTimeout = Globals.RuntimeConfig.Network.timeout
         socket.reuseAddress = true
-        socket.bind(InetSocketAddress(Globals.RuntimeConfig.Network.ip,Globals.RuntimeConfig.Network.port))
+        socket.bind(address)
 
         Log.i("Listener", "Socket binds on ${socket.inetAddress} , ${socket.localPort} ")
         Log.i("Listener", "Socket binds on ${socket.localSocketAddress} // ${socket.inetAddress} ")

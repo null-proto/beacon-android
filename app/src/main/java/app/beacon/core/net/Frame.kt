@@ -16,7 +16,7 @@ data class Frame(
         val size: UInt,
         val type: UInt
     ) {
-        companion object Static {
+        companion object {
             fun parse(data : UByteArray) : Header {
                 val size =
                     ((data[3].toUInt() shl 24) or (data[2].toUInt() shl 16) or (data[1].toUInt() shl 8) or (data[0].toUInt()))
@@ -30,8 +30,8 @@ data class Frame(
         }
     }
 
-    companion object Static {
-        fun fromUByteArray(data: UByteArray): Frame {
+    companion object {
+        fun from(data: UByteArray): Frame {
             return Frame(
                 header = Header(
                     size = data.size.toUInt(),
@@ -41,7 +41,7 @@ data class Frame(
             )
         }
 
-        fun fromKv(data: Kv): Frame {
+        fun from(data: Kv): Frame {
             val data = data.serialize()
             return Frame(
                 header = Header(
@@ -52,7 +52,17 @@ data class Frame(
             )
         }
 
-        fun echo(): Frame {
+        fun from(data: ByteArray , i2u : Boolean = false): Frame {
+            return Frame(
+                header = Header(
+                    size = data.size.toUInt(),
+                    type = 1u,
+                ),
+                data =  if (i2u) data.map { it.toByte() }.toByteArray() else data
+            )
+        }
+
+        fun from(): Frame {
             return Frame(
                 header = Header(
                     size = 0u,
@@ -61,6 +71,29 @@ data class Frame(
                 data = byteArrayOf()
             )
         }
+
+
+        fun empty(): Frame {
+            return Frame(
+                header = Header(
+                    size = 0u,
+                    type = 0u,
+                ),
+                data = byteArrayOf()
+            )
+        }
+    }
+
+    fun getKv() : Kv? {
+        return if (header.type==2u) {
+            Kv(data = data.map { it.toUByte() }.toUByteArray())
+        } else {
+            null
+        }
+    }
+
+    fun getBin() : Bin {
+        return Bin(data = data)
     }
 
     override fun equals(other: Any?): Boolean {
@@ -81,17 +114,5 @@ data class Frame(
         result = 31 * result + header.type.hashCode()
         result = 31 * result + data.contentHashCode()
         return result
-    }
-
-    fun getKv() : Kv? {
-        return if (header.type==2u) {
-            Kv(data = data.map { it.toUByte() }.toUByteArray())
-        } else {
-            null
-        }
-    }
-
-    fun getBin() : Bin {
-        return Bin(data = data)
     }
 }

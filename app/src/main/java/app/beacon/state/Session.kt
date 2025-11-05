@@ -24,32 +24,25 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.launch
+import java.net.InetSocketAddress
 import java.net.NetworkInterface
 import java.net.SocketException
 import java.net.SocketTimeoutException
 
 class Session(val context: Context , val rt : CoroutineScope) {
     val database = Room.databaseBuilder(context, DataBase::class.java , "registry.db").build()
-    val service = Listener()
+    val service = Listener(InetSocketAddress(Globals.RuntimeConfig.Network.ip,Globals.RuntimeConfig.Network.port))
     val router = Router()
 
     val state = State(
         registry = database.registry(),
         context = context,
-//        multicast = null,
     )
 
     data class State(
         val registry: Registry,
         val context: Context,
-//        var multicast : MulticastInf?
     )
-
-//    data class MulticastInf(
-//        val job: Job,
-//        val netIFace: NetworkInterface,
-//        val capabilities: NetworkCapabilities,
-//    )
 
     suspend fun attach(frame: Frame) {
         val kv = frame.getKv()
@@ -65,21 +58,24 @@ class Session(val context: Context , val rt : CoroutineScope) {
                 client.soTimeout = Globals.RuntimeConfig.Network.timeout
                 rt.launch {
                     try {
-                        val fm = client.inputStream.readNBytes(8).map { it.toUByte() }.toUByteArray()
-                        val header = Frame.Header.parse(fm)
-                        val data = client.inputStream.readNBytes(header.size.toInt())
-                        val frame = Frame( header = header, data = data )
-                        attach(frame)
+                        while (!client.isClosed) {
+                            val fm =
+                                client.inputStream.readNBytes(8).map { it.toUByte() }.toUByteArray()
+                            val header = Frame.Header.parse(fm)
+                            val data = client.inputStream.readNBytes(header.size.toInt())
+                            val frame = Frame(header = header, data = data)
+                            attach(frame)
+                        }
 
                     } catch (e : SocketException) {
-                        Log.w("Listener" , "Socket exception : ${e.message}")
-                    } catch (e : CancellationException) {
-                        Log.w("Listener" , "job cancelled")
-                    } catch (e : SocketTimeoutException) {
-                        Log.w("Listener" , "Socket Timeout ")
+                        Log.w("Connection" , "Socket exception : ${e.message}")
+                    } catch (_ : CancellationException) {
+                        Log.w("Connection" , "job cancelled")
+                    } catch (_ : SocketTimeoutException) {
+                        Log.w("Connection" , "Socket Timeout")
                     } catch (e : Exception) {
-                        Log.e("Listener" , "${e.javaClass.name}:: ${e.message}")
-                        Log.e("Listener" , e.stackTrace.toString())
+                        Log.e("Connection" , "${e.javaClass.name}:: ${e.message}")
+                        Log.e("Connection" , e.stackTrace.toString())
                     }
                 }
             }

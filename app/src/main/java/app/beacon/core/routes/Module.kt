@@ -25,8 +25,9 @@ interface Module {
             }
         }
 
-        fun with(block: Kv.()->Unit ) {
+        fun with(block: Kv.()->Unit ) : Result {
             kv.block()
+            return this
         }
 
         fun put(key: String , value: String) {

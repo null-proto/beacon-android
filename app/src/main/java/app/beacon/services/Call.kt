@@ -1,8 +1,6 @@
 package app.beacon.services
 
-import android.Manifest
 import android.app.Notification
-import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
 import android.app.Service
@@ -12,23 +10,18 @@ import android.media.Ringtone
 import android.media.RingtoneManager
 import android.os.IBinder
 import android.os.VibrationEffect
-import android.os.Vibrator
 import android.os.VibratorManager
 import android.util.Log
-import androidx.annotation.RequiresPermission
 import androidx.core.app.NotificationCompat
-import androidx.core.app.NotificationManagerCompat
 import app.beacon.R
 import app.beacon.activities.Call
-import app.beacon.modules.Ring
+import app.beacon.state.CallLock
 import app.beacon.state.Globals
-import kotlin.text.toInt
 
 
 class Call:  Service() {
     var ringtone: Ringtone? = null
     var vibrator: VibratorManager? = null
-    val nid = (1..10000).random().hashCode()
 
     override fun onBind(intent: Intent?): IBinder? {
         return null
@@ -58,16 +51,20 @@ class Call:  Service() {
                 }
                 call.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP
 
-                startActivity(call)
-
                 val uri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_RINGTONE)
                 ringtone = RingtoneManager.getRingtone(this,uri)
                 vibrator =  getSystemService(Context.VIBRATOR_MANAGER_SERVICE) as VibratorManager
                 ringtone?.isLooping = true
                 val vibEffect = VibrationEffect.createWaveform(longArrayOf(0,800,400,800,400,1000),intArrayOf(0,255,0,255,0,255) , 0)
-                ringtone?.play()
-                vibrator?.defaultVibrator?.vibrate(vibEffect)
-                startForeground(nid , makeNotification(title,name))
+
+                startForeground(1 , makeNotification(title,name))
+
+                if (!CallLock.isLocked) {
+                    ringtone?.play()
+                    vibrator?.defaultVibrator?.vibrate(vibEffect)
+                }
+
+                startActivity(call)
             }
         }
 
@@ -79,17 +76,18 @@ class Call:  Service() {
     }
 
     private fun makeNotification(title: String? , name : String?) : Notification {
-        val ringIntent = Intent(this , Call::class.java)
-        ringIntent.putExtra("title" , title)
-        ringIntent.putExtra("name" , name)
-        ringIntent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP
+        val call = Intent(this , Call::class.java)
+        call.putExtra("title" , title)
+        call.putExtra("name" , name)
+
+        call.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_FROM_BACKGROUND
 
         val stopCall = Intent(this , app.beacon.services.Call::class.java).apply {
             action = "STOP_CALL"
         }
 
         val pending = PendingIntent.getActivity(
-            this,0,ringIntent, PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+            this,0,call, PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
         )
 
         val pendingStopCall = PendingIntent.getActivity(
@@ -114,6 +112,5 @@ class Call:  Service() {
                 pendingStopCall
             )
             .build()
-
     }
 }

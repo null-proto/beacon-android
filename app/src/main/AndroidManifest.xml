@@ -51,19 +51,21 @@
             android:exported="false"
             android:process=":crash"
             android:label="CrashActivity"
-            android:launchMode="singleTask"
+            android:launchMode="singleInstance"
+            android:taskAffinity="app.beacon.crash"
+            android:excludeFromRecents="false"
             />
 
         <activity android:name=".activities.Call"
             android:exported="false"
             android:label="Call"
-            android:launchMode="singleInstance"
+            android:launchMode="singleTask"
             android:screenOrientation="portrait"
             android:showWhenLocked="true"
             android:taskAffinity="app.beacon.call"
             android:turnScreenOn="true"
             android:excludeFromRecents="true"
-            tools:ignore="DiscouragedApi" />
+            tools:ignore="DiscouragedApi,LockedOrientationActivity" />
 
         <service android:name=".services.Daemon"
             android:exported="false"

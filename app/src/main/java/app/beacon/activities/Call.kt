@@ -32,6 +32,7 @@ import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
 import app.beacon.services.Call
+import app.beacon.state.CallLock
 import app.beacon.ui.theme.BeaconTheme
 
 class Call: ComponentActivity() {
@@ -40,11 +41,10 @@ class Call: ComponentActivity() {
         enableEdgeToEdge()
         setShowWhenLocked(true)
         setTurnScreenOn(true)
+
         window.addFlags(
-            WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD or
-            WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED or
             WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON or
-            WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON
+            WindowManager.LayoutParams.FLAG_ALLOW_LOCK_WHILE_SCREEN_ON
         )
 
         WindowCompat.setDecorFitsSystemWindows(window,false)
@@ -52,16 +52,6 @@ class Call: ComponentActivity() {
             ctrlr.hide(WindowInsetsCompat.Type.statusBars() or WindowInsetsCompat.Type.navigationBars())
             ctrlr.systemBarsBehavior = WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
         }
-
-//        val uri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_RINGTONE)
-//        val ringtone = RingtoneManager.getRingtone(this,uri)
-//        ringtone.isLooping = true
-//        val vibrator = getSystemService(Context.VIBRATOR_MANAGER_SERVICE) as VibratorManager
-//        val vibEffect = VibrationEffect.createWaveform(longArrayOf(0,800,400,800,400,1000),intArrayOf(0,255,0,255,0,255) , 0)
-//
-//        ringtone.play()
-//        vibrator.defaultVibrator.vibrate(vibEffect)
-
 
         val title = intent.getStringExtra("title")
         val name = intent.getStringExtra("name")
@@ -72,6 +62,7 @@ class Call: ComponentActivity() {
         setContent {
             BeaconTheme {
                 Phone(title = title , name = name) {
+                    CallLock.unlock()
                     startForegroundService(ring)
                     finish()
                 }

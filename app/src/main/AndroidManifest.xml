@@ -59,7 +59,7 @@
         <activity android:name=".activities.Call"
             android:exported="false"
             android:label="Call"
-            android:launchMode="singleTask"
+            android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:showWhenLocked="true"
             android:taskAffinity="app.beacon.call"

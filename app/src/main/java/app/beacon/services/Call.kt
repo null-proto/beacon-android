@@ -51,19 +51,20 @@ class Call:  Service() {
                     putExtra("name" , name)
                 }
 
-                call.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP
+                call.flags = Intent.FLAG_ACTIVITY_NEW_TASK or
+                        Intent.FLAG_ACTIVITY_CLEAR_TOP or
+                        Intent.FLAG_ACTIVITY_SINGLE_TOP or
+                        Intent.FLAG_ACTIVITY_NO_USER_ACTION
 
-                if (!CallLock.isLocked) {
-                    val uri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_RINGTONE)
-                    ringtone = RingtoneManager.getRingtone(this,uri)
-                    vibrator =  getSystemService(Context.VIBRATOR_MANAGER_SERVICE) as VibratorManager
-                    ringtone?.isLooping = true
-                    val vibEffect = VibrationEffect.createWaveform(longArrayOf(0,800,400,800,400,1000),intArrayOf(0,255,0,255,0,255) , 0)
-                    startForeground(nid , makeNotification(title,name))
-                    ringtone?.play()
-                    vibrator?.defaultVibrator?.vibrate(vibEffect)
-                    CallLock.lock()
-                }
+                val uri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_RINGTONE)
+                ringtone = RingtoneManager.getRingtone(this,uri)
+                vibrator =  getSystemService(Context.VIBRATOR_MANAGER_SERVICE) as VibratorManager
+                ringtone?.isLooping = true
+                val vibEffect = VibrationEffect.createWaveform(longArrayOf(0,800,400,800,400,1000),intArrayOf(0,255,0,255,0,255) , 0)
+                startForeground(nid , makeNotification(title,name))
+                ringtone?.play()
+                vibrator?.defaultVibrator?.vibrate(vibEffect)
+                CallLock.lock()
 
                 startActivity(call)
             }
@@ -81,7 +82,10 @@ class Call:  Service() {
         call.putExtra("title" , title)
         call.putExtra("name" , name)
 
-        call.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP
+        call.flags = Intent.FLAG_ACTIVITY_NEW_TASK or
+                Intent.FLAG_ACTIVITY_CLEAR_TOP or
+                Intent.FLAG_ACTIVITY_SINGLE_TOP or
+                Intent.FLAG_ACTIVITY_NO_USER_ACTION
 
         val stopCall = Intent(this , app.beacon.services.Call::class.java).apply {
             action = "STOP_CALL"
@@ -103,7 +107,7 @@ class Call:  Service() {
             .setSmallIcon(R.drawable.ic_launcher_foreground)
             .setContentTitle(title?:"Incoming Call")
             .setContentText(name?:"Ping")
-            .setPriority(NotificationCompat.PRIORITY_MAX)
+            .setPriority(NotificationCompat.PRIORITY_HIGH)
             .setCategory(NotificationCompat.CATEGORY_CALL)
             .setOngoing(true)
             .setSilent(true)

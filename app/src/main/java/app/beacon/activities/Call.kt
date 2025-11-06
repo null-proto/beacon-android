@@ -37,9 +37,11 @@ import app.beacon.ui.theme.BeaconTheme
 
 class Call: ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
+        setShowWhenLocked(true)
+        setTurnScreenOn(true)
+        enableEdgeToEdge()
         super.onCreate(savedInstanceState)
         CallLock.ongoingCall.value = true
-        if (!CallLock.initiate) finish()
         window.addFlags(
             WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON or
             WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON or
@@ -47,9 +49,6 @@ class Call: ComponentActivity() {
             WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED
         )
 
-        enableEdgeToEdge()
-        setShowWhenLocked(true)
-        setTurnScreenOn(true)
 
         WindowCompat.setDecorFitsSystemWindows(window,false)
         WindowInsetsControllerCompat(window,window.decorView).let { ctrlr ->

@@ -33,7 +33,7 @@ object Notification: Module {
                 .setContentTitle(args.ip.toString())
                 .setContentText(args.kv?.get("msg") ?: "Ping")
                 .setPriority(NotificationCompat.PRIORITY_DEFAULT)
-                .setCategory(Globals.Notification.OpenChannel.CATEGORY)
+                .setCategory(NotificationCompat.CATEGORY_MESSAGE)
                 .setGroup(Globals.Notification.OpenChannel.CATEGORY)
                 .build()
 

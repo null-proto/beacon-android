@@ -7,6 +7,7 @@ import java.util.concurrent.TimeUnit
 import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkManager
 import app.beacon.services.Daemon
+import app.beacon.state.CallLock
 import app.beacon.state.Globals
 import app.beacon.state.Session
 import app.beacon.ui.helpers.CrashHandler

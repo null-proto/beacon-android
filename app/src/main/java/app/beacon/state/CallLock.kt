@@ -6,15 +6,15 @@ import androidx.lifecycle.ViewModel
 object CallLock: ViewModel() {
     private var lock = false
     var ongoingCall = mutableStateOf(false)
-    var initiated = mutableStateOf(false)
+    var initiated = false
 
 
     val isLocked : Boolean
         get() { return lock }
 
     var initiate : Boolean
-        get() { return initiated.value }
-        set(value) { initiated.value = value }
+        get() { return initiated }
+        set(value) { initiated = value }
 
     fun lock(): Boolean {
         if (!lock) {
@@ -28,7 +28,7 @@ object CallLock: ViewModel() {
 
 
     fun unlock() {
-        initiated.value = false
+        initiated = false
         ongoingCall.value = false
         lock = false
     }

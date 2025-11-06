@@ -33,10 +33,10 @@ class Daemon: Service() {
     }
 
     override fun onCreate() {
+        super.onCreate()
         Log.i("Services:Daemon:onCreate","starting daemon")
         Globals.isDaemonRunning = true
         Globals.daemonForegroundId = nid
-        super.onCreate()
         startForeground(nid , makeNotification())
         session = Session( applicationContext , serviceScope )
     }
@@ -46,11 +46,11 @@ class Daemon: Service() {
     }
 
     override fun onDestroy() {
+        super.onDestroy()
         Log.i("Services:Daemon:onDestroy","daemon stopped")
         session.exit()
         Globals.isDaemonRunning = false
         serviceScope.cancel()
-        super.onDestroy()
     }
 
     private fun makeNotification() : android.app.Notification {
@@ -64,6 +64,7 @@ class Daemon: Service() {
             Globals.Notification.OpenChannel.CATEGORY,
             NotificationManager.IMPORTANCE_DEFAULT
         )
+
         val callChannel = NotificationChannel(
             Globals.Notification.CallChannel.ID,
             Globals.Notification.CallChannel.CATEGORY,

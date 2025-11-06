@@ -7,16 +7,12 @@ import android.content.Intent
 import android.os.IBinder
 import android.util.Log
 import androidx.core.app.NotificationCompat
-import app.beacon.core.net.Listener
 import app.beacon.state.Globals
 import app.beacon.state.Globals.Notification
 import app.beacon.state.Session
-import app.beacon.ui.helpers.CrashHandler
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.Job
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.launch
@@ -25,6 +21,7 @@ class Daemon: Service() {
     var supervisorJob = SupervisorJob()
     val serviceScope = CoroutineScope(Dispatchers.IO + supervisorJob )
     lateinit var session : Session
+    val nid = (0 .. 5000).random().hashCode()
 
     @OptIn(DelicateCoroutinesApi::class)
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
@@ -37,10 +34,11 @@ class Daemon: Service() {
 
     override fun onCreate() {
         Log.i("Services:Daemon:onCreate","starting daemon")
-        super.onCreate()
-        startForeground(1 , makeNotification())
-        session = Session( applicationContext , serviceScope )
         Globals.isDaemonRunning = true
+        Globals.daemonForegroundId = nid
+        super.onCreate()
+        startForeground(nid , makeNotification())
+        session = Session( applicationContext , serviceScope )
     }
 
     override fun onBind(intent: Intent?): IBinder? {
@@ -70,7 +68,9 @@ class Daemon: Service() {
             Globals.Notification.CallChannel.ID,
             Globals.Notification.CallChannel.CATEGORY,
             NotificationManager.IMPORTANCE_HIGH
-        )
+        ).apply {
+            lockscreenVisibility = android.app.Notification.VISIBILITY_PUBLIC
+        }
 
         val nm = getSystemService(NOTIFICATION_SERVICE) as NotificationManager
         nm.createNotificationChannel(channel)
@@ -82,6 +82,7 @@ class Daemon: Service() {
             .setContentText(Notification.MainChannelDaemon.DESCRIPTION)
             .setCategory(Notification.MainChannelDaemon.CATEGORY)
             .setGroup(Notification.MainChannelDaemon.CATEGORY)
+            .setSilent(true)
             .build()
     }
 }

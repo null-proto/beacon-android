@@ -22,6 +22,7 @@ import app.beacon.state.Globals
 class Call:  Service() {
     var ringtone: Ringtone? = null
     var vibrator: VibratorManager? = null
+    val nid = (0 .. 5000).random().hashCode()
 
     override fun onBind(intent: Intent?): IBinder? {
         return null
@@ -31,10 +32,10 @@ class Call:  Service() {
         when (intent?.action) {
             "STOP_CALL" -> {
                 Log.i("Call" , "Call Ended")
+                CallLock.unlock()
                 ringtone?.stop()
                 vibrator?.defaultVibrator?.cancel()
                 stopForeground(STOP_FOREGROUND_REMOVE)
-
                 (getSystemService(NOTIFICATION_SERVICE) as NotificationManager).cancel(nid)
 
                 stopSelf()
@@ -49,19 +50,19 @@ class Call:  Service() {
                     putExtra("title" , title)
                     putExtra("name" , name)
                 }
+
                 call.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP
 
-                val uri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_RINGTONE)
-                ringtone = RingtoneManager.getRingtone(this,uri)
-                vibrator =  getSystemService(Context.VIBRATOR_MANAGER_SERVICE) as VibratorManager
-                ringtone?.isLooping = true
-                val vibEffect = VibrationEffect.createWaveform(longArrayOf(0,800,400,800,400,1000),intArrayOf(0,255,0,255,0,255) , 0)
-
-                startForeground(1 , makeNotification(title,name))
-
                 if (!CallLock.isLocked) {
+                    val uri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_RINGTONE)
+                    ringtone = RingtoneManager.getRingtone(this,uri)
+                    vibrator =  getSystemService(Context.VIBRATOR_MANAGER_SERVICE) as VibratorManager
+                    ringtone?.isLooping = true
+                    val vibEffect = VibrationEffect.createWaveform(longArrayOf(0,800,400,800,400,1000),intArrayOf(0,255,0,255,0,255) , 0)
+                    startForeground(nid , makeNotification(title,name))
                     ringtone?.play()
                     vibrator?.defaultVibrator?.vibrate(vibEffect)
+                    CallLock.lock()
                 }
 
                 startActivity(call)
@@ -80,7 +81,7 @@ class Call:  Service() {
         call.putExtra("title" , title)
         call.putExtra("name" , name)
 
-        call.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_FROM_BACKGROUND
+        call.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP
 
         val stopCall = Intent(this , app.beacon.services.Call::class.java).apply {
             action = "STOP_CALL"

@@ -38,14 +38,18 @@ import app.beacon.ui.theme.BeaconTheme
 class Call: ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        CallLock.ongoingCall.value = true
+        if (!CallLock.initiate) finish()
+        window.addFlags(
+            WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON or
+            WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON or
+            WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD or
+            WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED
+        )
+
         enableEdgeToEdge()
         setShowWhenLocked(true)
         setTurnScreenOn(true)
-
-        window.addFlags(
-            WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON or
-            WindowManager.LayoutParams.FLAG_ALLOW_LOCK_WHILE_SCREEN_ON
-        )
 
         WindowCompat.setDecorFitsSystemWindows(window,false)
         WindowInsetsControllerCompat(window,window.decorView).let { ctrlr ->
@@ -59,15 +63,20 @@ class Call: ComponentActivity() {
         val ring = Intent(this , Call::class.java)
         ring.action = "STOP_CALL"
 
+        CallLock.lock()
         setContent {
             BeaconTheme {
                 Phone(title = title , name = name) {
-                    CallLock.unlock()
                     startForegroundService(ring)
                     finish()
                 }
             }
         }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        CallLock.ongoingCall.value = false
     }
 
     @Preview @Composable private fun Phone(

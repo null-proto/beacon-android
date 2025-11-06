@@ -11,6 +11,7 @@ data object Globals {
     var isCrashed : Boolean = false
     var isIPv6MulticastingRunning: Boolean = false
     var isScanningMode: Boolean = false
+    var daemonForegroundId :Int? = null
 
     lateinit var inf : Inf
 

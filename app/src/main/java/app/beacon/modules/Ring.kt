@@ -33,8 +33,9 @@ object Ring : Module {
                 Manifest.permission.POST_NOTIFICATIONS
             ) == PackageManager.PERMISSION_GRANTED
         ) {
-
             if (!CallLock.isLocked) {
+
+                CallLock.initiate = true
                 val intent = Intent(args.state.context, Call::class.java).apply {
                     putExtra("title", args.ip.hostName)
                     putExtra("name", args.kv?.get("msg"))

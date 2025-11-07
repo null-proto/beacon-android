@@ -30,9 +30,7 @@ import app.beacon.ui.components.DeviceItem
                 modifier = Modifier.fillMaxSize()
                     .padding(top=8.dp)
             ) {
-                items((1..30).toList()) {
-                    DeviceItem()
-                }
+
             }
         }
     }

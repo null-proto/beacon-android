@@ -16,6 +16,7 @@ import androidx.core.app.NotificationManagerCompat
 import androidx.core.content.ContextCompat
 import app.beacon.R
 import app.beacon.core.net.types.Kv
+import app.beacon.core.request.C
 import app.beacon.core.routes.Args
 import app.beacon.core.routes.Module
 import app.beacon.services.Call
@@ -24,7 +25,7 @@ import app.beacon.state.Globals
 import kotlin.contracts.contract
 
 object Ring : Module {
-    override val name: String = "play-sound"
+    override val name: String = C.RING
 
     override suspend fun work(args: Args): Module.Result {
         Log.d("Ring", "Playing sound")
@@ -39,14 +40,14 @@ object Ring : Module {
                 CallLock.initiate = true
                 val intent = Intent(args.state.context, Call::class.java).apply {
                     putExtra("title", args.ip.hostName)
-                    putExtra("name", args.kv?.get(Kv.MESSAGE))
+                    putExtra("name", args.kv?.get(C.MESSAGE))
                 }
                 ContextCompat.startForegroundService(args.state.context, intent)
                 Log.d("Ring", "reached foreground service started")
 
                 return Module.Result.ok()
             } else {
-                return Module.Result.error(code = 11).with { put("msg", "already requested") }
+                return Module.Result.error(code = 11).with { put(C.MESSAGE, "already requested") }
             }
         } else {
             return Module.Result.error(code = 10)

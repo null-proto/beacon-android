@@ -12,10 +12,11 @@ import app.beacon.core.routes.Args
 import app.beacon.core.routes.Module
 import app.beacon.state.Globals
 import app.beacon.R
+import app.beacon.core.request.C
 
 object Notification: Module {
 
-    override val name: String = "notify"
+    override val name: String = C.NOTIFY
 
     override suspend fun work(args: Args): Module.Result {
 
@@ -31,7 +32,7 @@ object Notification: Module {
             )
                 .setSmallIcon(R.drawable.ic_launcher_foreground)
                 .setContentTitle(args.ip.toString())
-                .setContentText(args.kv?.get("msg") ?: "Ping")
+                .setContentText(args.kv?.get(C.MESSAGE) ?: "Ping")
                 .setPriority(NotificationCompat.PRIORITY_DEFAULT)
                 .setCategory(NotificationCompat.CATEGORY_MESSAGE)
                 .setGroup(Globals.Notification.OpenChannel.CATEGORY)

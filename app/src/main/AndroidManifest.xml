@@ -112,6 +112,7 @@
             android:foregroundServiceType="phoneCall|mediaPlayback|microphone"
             />
 
+
         <receiver android:name=".services.Broadcasts"
             android:exported="true">
             <intent-filter>

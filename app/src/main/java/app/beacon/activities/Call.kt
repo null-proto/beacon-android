@@ -63,7 +63,6 @@ class Call: ComponentActivity() {
         val ring = Intent(this , Call::class.java)
         ring.action = "STOP_CALL"
 
-        CallLock.lock()
         setContent {
             BeaconTheme {
                 Phone(title = title , name = name) {
@@ -74,6 +73,7 @@ class Call: ComponentActivity() {
         }
     }
 
+
     override fun onDestroy() {
         super.onDestroy()
         CallLock.ongoingCall.value = false
@@ -82,7 +82,7 @@ class Call: ComponentActivity() {
     @Preview @Composable private fun Phone(
         name : String? = null,
         title:String? = null,
-        onStop : ()->Unit ,
+        onStop : ()->Unit = {},
     ) {
         Box(
             modifier = Modifier.fillMaxSize()

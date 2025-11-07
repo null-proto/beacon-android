@@ -7,7 +7,6 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -25,6 +24,10 @@ import androidx.compose.material3.IconButtonColors
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
@@ -33,7 +36,6 @@ import androidx.compose.ui.unit.sp
 import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
-import app.beacon.services.Call
 import app.beacon.services.VoIPRX
 import app.beacon.state.CallLock
 import app.beacon.ui.theme.BeaconTheme
@@ -44,7 +46,6 @@ class VoIPRX: ComponentActivity() {
         setTurnScreenOn(true)
         enableEdgeToEdge()
         super.onCreate(savedInstanceState)
-        CallLock.ongoingCall.value = true
         window.addFlags(
             WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON or
                     WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON or
@@ -61,23 +62,24 @@ class VoIPRX: ComponentActivity() {
         val title = intent.getStringExtra("title")
         val name = intent.getStringExtra("name")
 
-        val ring = Intent(this , VoIPRX::class.java)
-        ring.action = "STOP_CALL"
+        val srx = Intent(this , VoIPRX::class.java).apply { action = "STOP_CALL" }
+        val arx = Intent(this , VoIPRX::class.java).apply { action = "ATTEND_CALL" }
 
-        CallLock.lock()
         setContent {
             BeaconTheme {
-                Phone(title = title , name = name) {
-                    startForegroundService(ring)
-                    finish()
-                }
+                Phone(
+                    title = title ,
+                    name = name,
+                    onAttend = {
+                        startForegroundService(arx)
+                    },
+                    onStop = {
+                        startForegroundService(srx)
+                        finish()
+                    }
+                )
             }
         }
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        CallLock.ongoingCall.value = false
     }
 
     @Preview @Composable private fun Phone(
@@ -115,7 +117,7 @@ class VoIPRX: ComponentActivity() {
                     .align(Alignment.BottomCenter),
                 horizontalAlignment = Alignment.CenterHorizontally,
             ) {
-                PreCallButtons(onStop, onAttend)
+                PreCallButtons(onAttend = onAttend , onStop = onStop)
                 Spacer(
                     modifier = Modifier.padding(42.dp)
                 )
@@ -126,10 +128,15 @@ class VoIPRX: ComponentActivity() {
 
     @Preview
     @Composable fun PreCallButtons( onAttend: () -> Unit = {}, onStop: () -> Unit = {} ) {
+        var isOngoing by remember { CallLock.ongoingCall }
+
         Row {
-            if (!CallLock.ongoingCall.value) {
+            if (!isOngoing) {
                 IconButton(
-                    onClick = onAttend,
+                    onClick = {
+                        onAttend()
+                        isOngoing = false
+                    },
                     colors = IconButtonColors(
                         containerColor = MaterialTheme.colorScheme.tertiary,
                         contentColor = MaterialTheme.colorScheme.onTertiary,

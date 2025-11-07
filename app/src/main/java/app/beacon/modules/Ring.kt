@@ -15,6 +15,7 @@ import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import androidx.core.content.ContextCompat
 import app.beacon.R
+import app.beacon.core.net.types.Kv
 import app.beacon.core.routes.Args
 import app.beacon.core.routes.Module
 import app.beacon.services.Call
@@ -33,12 +34,12 @@ object Ring : Module {
                 Manifest.permission.POST_NOTIFICATIONS
             ) == PackageManager.PERMISSION_GRANTED
         ) {
-            if (!CallLock.isLocked) {
+            if (!CallLock.initiate) {
 
                 CallLock.initiate = true
                 val intent = Intent(args.state.context, Call::class.java).apply {
                     putExtra("title", args.ip.hostName)
-                    putExtra("name", args.kv?.get("msg"))
+                    putExtra("name", args.kv?.get(Kv.MESSAGE))
                 }
                 ContextCompat.startForegroundService(args.state.context, intent)
                 Log.d("Ring", "reached foreground service started")

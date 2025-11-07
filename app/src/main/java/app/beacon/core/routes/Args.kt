@@ -1,6 +1,5 @@
 package app.beacon.core.routes
 
-import android.content.Context
 import app.beacon.core.net.types.Bin
 import app.beacon.core.net.types.Kv
 import app.beacon.state.Session

@@ -9,6 +9,7 @@ import androidx.core.content.ContextCompat
 import app.beacon.core.routes.Args
 import app.beacon.core.routes.Module
 import app.beacon.services.Call
+import app.beacon.services.VoIPRX
 import app.beacon.state.CallLock
 
 object CallReceiver: Module {
@@ -22,10 +23,10 @@ object CallReceiver: Module {
                 Manifest.permission.POST_NOTIFICATIONS
             ) == PackageManager.PERMISSION_GRANTED
         ) {
-            if (!CallLock.isLocked) {
+            if (!CallLock.initiate) {
 
                 CallLock.initiate = true
-                val intent = Intent(args.state.context, Call::class.java).apply {
+                val intent = Intent(args.state.context, VoIPRX::class.java).apply {
                     putExtra("title", args.ip.hostName)
                     putExtra("name", args.kv?.get("msg"))
                 }

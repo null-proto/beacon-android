@@ -22,6 +22,8 @@ class VoIPRX: Service() {
     var ringtone: Ringtone? = null
     var vibrator: VibratorManager? = null
     val nid = (0 .. 5000).random().hashCode()
+    var title: String? = null
+    var name : String? = null
 
     override fun onBind(intent: Intent?): IBinder? = null
 
@@ -38,10 +40,16 @@ class VoIPRX: Service() {
                 stopSelf()
             }
 
+            "ATTEND_CALL" -> {
+                ringtone?.stop()
+                vibrator?.defaultVibrator?.cancel()
+                CallLock.lock()
+            }
+
             else -> {
                 Log.i("VoIP RX" , "Incoming call")
-                val title = intent?.getStringExtra("title")
-                val name = intent?.getStringExtra("name")
+                title = intent?.getStringExtra("title")
+                name = intent?.getStringExtra("name")
 
                 val rx = Intent(this , VoIPRX::class.java).apply {
                     putExtra("title" , title)
@@ -57,12 +65,10 @@ class VoIPRX: Service() {
                 ringtone = RingtoneManager.getRingtone(this,uri)
                 vibrator =  getSystemService(VIBRATOR_MANAGER_SERVICE) as VibratorManager
                 ringtone?.isLooping = true
-                val vibEffect = VibrationEffect.createWaveform(longArrayOf(0,800,400,800,400,1000),intArrayOf(0,255,0,255,0,255) , 0)
-                startForeground(nid , makeNotification(title,name))
+                val vibEffect = VibrationEffect.createWaveform(longArrayOf(200 , 200,0),intArrayOf(0,50,80) , 0)
+                startForeground(nid , makeNotification())
                 ringtone?.play()
                 vibrator?.defaultVibrator?.vibrate(vibEffect)
-                CallLock.lock()
-
                 startActivity(rx)
             }
         }
@@ -70,7 +76,7 @@ class VoIPRX: Service() {
         return START_NOT_STICKY
     }
 
-    private fun makeNotification(title: String? , name : String?) : Notification {
+    private fun makeNotification() : Notification {
         val rx = Intent(this , VoIPRX::class.java)
         rx.putExtra("title" , title)
         rx.putExtra("name" , name)
@@ -80,17 +86,10 @@ class VoIPRX: Service() {
                 Intent.FLAG_ACTIVITY_SINGLE_TOP or
                 Intent.FLAG_ACTIVITY_NO_USER_ACTION
 
-        val stopCall = Intent(this , app.beacon.services.VoIPRX::class.java).apply {
-            action = "STOP_CALL"
-        }
-
         val pending = PendingIntent.getActivity(
             this,0,rx, PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
         )
-
-        val pendingStopCall = PendingIntent.getActivity(
-            this,0,stopCall, PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
-        )
+        val uri = RingtoneManager.getActualDefaultRingtoneUri(this , 1)
 
         return NotificationCompat.Builder(
             this,
@@ -104,11 +103,6 @@ class VoIPRX: Service() {
             .setCategory(NotificationCompat.CATEGORY_CALL)
             .setOngoing(true)
             .setSilent(true)
-            .addAction(
-                android.R.drawable.ic_menu_close_clear_cancel,
-                "Decline",
-                pendingStopCall
-            )
             .build()
     }
 }

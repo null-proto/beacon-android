@@ -87,7 +87,7 @@ class Session(val context: Context , val rt : CoroutineScope) {
                         Log.w("Connection" , "Socket Timeout")
                     } catch (e : Exception) {
                         Log.e("Connection" , "${e.javaClass.name}:: ${e.message}")
-                        Log.e("Connection" , e.stackTrace.toString())
+                        Log.e("Connection" , e.stackTrace.joinToString("\n"))
                     }
                 }
             }

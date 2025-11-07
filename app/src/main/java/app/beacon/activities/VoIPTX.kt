@@ -16,7 +16,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.rounded.Call
 import androidx.compose.material.icons.rounded.CallEnd
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -32,7 +31,6 @@ import androidx.compose.ui.unit.sp
 import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
-import app.beacon.services.Call
 import app.beacon.services.VoIPTX
 import app.beacon.state.CallLock
 import app.beacon.ui.theme.BeaconTheme
@@ -43,7 +41,6 @@ class VoIPTX: ComponentActivity() {
         setTurnScreenOn(true)
         enableEdgeToEdge()
         super.onCreate(savedInstanceState)
-        CallLock.ongoingCall.value = true
         window.addFlags(
             WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON or
                     WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON or
@@ -60,23 +57,17 @@ class VoIPTX: ComponentActivity() {
         val title = intent.getStringExtra("title")
         val name = intent.getStringExtra("name")
 
-        val ring = Intent(this , VoIPTX::class.java)
-        ring.action = "STOP_CALL"
+        val srt = Intent(this , VoIPTX::class.java)
+        srt.action = "STOP_CALL"
 
-        CallLock.lock()
         setContent {
             BeaconTheme {
                 Phone(title = title , name = name) {
-                    startForegroundService(ring)
+                    startForegroundService(srt)
                     finish()
                 }
             }
         }
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        CallLock.ongoingCall.value = false
     }
 
     @Preview @Composable private fun Phone(

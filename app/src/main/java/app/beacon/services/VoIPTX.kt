@@ -32,12 +32,11 @@ class VoIPTX: Service() {
         when (intent?.action) {
             "STOP_CALL" -> {
                 Log.i("Call" , "Call Ended")
-                CallLock.unlock()
                 ringtone?.stop()
                 vibrator?.defaultVibrator?.cancel()
                 stopForeground(STOP_FOREGROUND_REMOVE)
                 (getSystemService(NOTIFICATION_SERVICE) as NotificationManager).cancel(nid)
-
+                CallLock.unlock()
                 stopSelf()
             }
 
@@ -64,17 +63,11 @@ class VoIPTX: Service() {
                 startForeground(nid , makeNotification(title,name))
                 ringtone?.play()
                 vibrator?.defaultVibrator?.vibrate(vibEffect)
-                CallLock.lock()
-
                 startActivity(tx)
             }
         }
 
         return START_NOT_STICKY
-    }
-
-    override fun onCreate() {
-        super.onCreate()
     }
 
     private fun makeNotification(title: String? , name : String?) : Notification {
@@ -87,16 +80,8 @@ class VoIPTX: Service() {
                 Intent.FLAG_ACTIVITY_SINGLE_TOP or
                 Intent.FLAG_ACTIVITY_NO_USER_ACTION
 
-        val stopCall = Intent(this , app.beacon.services.VoIPTX::class.java).apply {
-            action = "STOP_CALL"
-        }
-
         val pending = PendingIntent.getActivity(
             this,0,tx, PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
-        )
-
-        val pendingStopCall = PendingIntent.getActivity(
-            this,0,stopCall, PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
         )
 
         return NotificationCompat.Builder(
@@ -111,11 +96,6 @@ class VoIPTX: Service() {
             .setCategory(NotificationCompat.CATEGORY_CALL)
             .setOngoing(true)
             .setSilent(true)
-            .addAction(
-                android.R.drawable.ic_menu_close_clear_cancel,
-                "Decline",
-                pendingStopCall
-            )
             .build()
     }
 }

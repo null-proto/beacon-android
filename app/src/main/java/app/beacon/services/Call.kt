@@ -4,6 +4,7 @@ import android.app.Notification
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
+import android.app.Person
 import android.app.Service
 import android.content.Context
 import android.content.Intent
@@ -33,12 +34,11 @@ class Call:  Service() {
         when (intent?.action) {
             "STOP_CALL" -> {
                 Log.i("Call" , "Call Ended")
-                CallLock.unlock()
                 ringtone?.stop()
                 vibrator?.defaultVibrator?.cancel()
                 stopForeground(STOP_FOREGROUND_REMOVE)
                 (getSystemService(NOTIFICATION_SERVICE) as NotificationManager).cancel(nid)
-
+                CallLock.unlock()
                 stopSelf()
             }
 
@@ -62,30 +62,15 @@ class Call:  Service() {
                 vibrator =  getSystemService(Context.VIBRATOR_MANAGER_SERVICE) as VibratorManager
                 ringtone?.isLooping = true
                 val vibEffect = VibrationEffect.createWaveform(longArrayOf(0,800,400,800,400,1000),intArrayOf(0,255,0,255,0,255) , 0)
+                CallLock.lock()
                 startForeground(nid , makeNotification(title,name))
                 ringtone?.play()
                 vibrator?.defaultVibrator?.vibrate(vibEffect)
-                CallLock.lock()
-
                 startActivity(call)
             }
         }
 
         return START_NOT_STICKY
-    }
-
-    override fun onCreate() {
-        super.onCreate()
-        val callChannel = NotificationChannel(
-            Globals.Notification.CallChannel.ID,
-            NotificationCompat.CATEGORY_CALL,
-            NotificationManager.IMPORTANCE_HIGH
-        ).apply {
-            lockscreenVisibility = android.app.Notification.VISIBILITY_PUBLIC
-        }
-
-        val nm = getSystemService(NOTIFICATION_SERVICE) as NotificationManager
-        nm.createNotificationChannel(callChannel)
     }
 
     private fun makeNotification(title: String? , name : String?) : Notification {
@@ -98,16 +83,8 @@ class Call:  Service() {
                 Intent.FLAG_ACTIVITY_SINGLE_TOP or
                 Intent.FLAG_ACTIVITY_NO_USER_ACTION
 
-        val stopCall = Intent(this , app.beacon.services.Call::class.java).apply {
-            action = "STOP_CALL"
-        }
-
         val pending = PendingIntent.getActivity(
             this,0,call, PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
-        )
-
-        val pendingStopCall = PendingIntent.getActivity(
-            this,0,stopCall, PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
         )
 
         return NotificationCompat.Builder(
@@ -121,12 +98,7 @@ class Call:  Service() {
             .setPriority(NotificationCompat.PRIORITY_HIGH)
             .setCategory(NotificationCompat.CATEGORY_CALL)
             .setOngoing(true)
-            .setSilent(true)
-            .addAction(
-                android.R.drawable.ic_menu_close_clear_cancel,
-                "Decline",
-                pendingStopCall
-            )
+            .setSound(null)
             .build()
     }
 }

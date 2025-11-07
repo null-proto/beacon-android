@@ -15,19 +15,18 @@ import android.os.VibratorManager
 import android.util.Log
 import androidx.core.app.NotificationCompat
 import app.beacon.R
-import app.beacon.activities.Call
+import app.beacon.activities.VoIPTX
 import app.beacon.state.CallLock
 import app.beacon.state.Globals
 
-
-class Call:  Service() {
+class VoIPTX: Service() {
     var ringtone: Ringtone? = null
     var vibrator: VibratorManager? = null
     val nid = (0 .. 5000).random().hashCode()
 
-    override fun onBind(intent: Intent?): IBinder? {
-        return null
-    }
+
+    override fun onBind(intent: Intent?): IBinder? = null
+
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         when (intent?.action) {
@@ -47,12 +46,12 @@ class Call:  Service() {
                 val title = intent?.getStringExtra("title")
                 val name = intent?.getStringExtra("name")
 
-                val call = Intent(this , Call::class.java).apply {
+                val tx = Intent(this , VoIPTX::class.java).apply {
                     putExtra("title" , title)
                     putExtra("name" , name)
                 }
 
-                call.flags = Intent.FLAG_ACTIVITY_NEW_TASK or
+                tx.flags = Intent.FLAG_ACTIVITY_NEW_TASK or
                         Intent.FLAG_ACTIVITY_CLEAR_TOP or
                         Intent.FLAG_ACTIVITY_SINGLE_TOP or
                         Intent.FLAG_ACTIVITY_NO_USER_ACTION
@@ -67,7 +66,7 @@ class Call:  Service() {
                 vibrator?.defaultVibrator?.vibrate(vibEffect)
                 CallLock.lock()
 
-                startActivity(call)
+                startActivity(tx)
             }
         }
 
@@ -76,34 +75,24 @@ class Call:  Service() {
 
     override fun onCreate() {
         super.onCreate()
-        val callChannel = NotificationChannel(
-            Globals.Notification.CallChannel.ID,
-            NotificationCompat.CATEGORY_CALL,
-            NotificationManager.IMPORTANCE_HIGH
-        ).apply {
-            lockscreenVisibility = android.app.Notification.VISIBILITY_PUBLIC
-        }
-
-        val nm = getSystemService(NOTIFICATION_SERVICE) as NotificationManager
-        nm.createNotificationChannel(callChannel)
     }
 
     private fun makeNotification(title: String? , name : String?) : Notification {
-        val call = Intent(this , Call::class.java)
-        call.putExtra("title" , title)
-        call.putExtra("name" , name)
+        val tx = Intent(this , VoIPTX::class.java)
+        tx.putExtra("title" , title)
+        tx.putExtra("name" , name)
 
-        call.flags = Intent.FLAG_ACTIVITY_NEW_TASK or
+        tx.flags = Intent.FLAG_ACTIVITY_NEW_TASK or
                 Intent.FLAG_ACTIVITY_CLEAR_TOP or
                 Intent.FLAG_ACTIVITY_SINGLE_TOP or
                 Intent.FLAG_ACTIVITY_NO_USER_ACTION
 
-        val stopCall = Intent(this , app.beacon.services.Call::class.java).apply {
+        val stopCall = Intent(this , app.beacon.services.VoIPTX::class.java).apply {
             action = "STOP_CALL"
         }
 
         val pending = PendingIntent.getActivity(
-            this,0,call, PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+            this,0,tx, PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
         )
 
         val pendingStopCall = PendingIntent.getActivity(
@@ -116,8 +105,8 @@ class Call:  Service() {
         )
             .setFullScreenIntent(pending ,true)
             .setSmallIcon(R.drawable.ic_launcher_foreground)
-            .setContentTitle(title?:"Incoming Call")
-            .setContentText(name?:"Ping")
+            .setContentTitle(title?:"Making Call")
+            .setContentText(name?:"Unknown")
             .setPriority(NotificationCompat.PRIORITY_HIGH)
             .setCategory(NotificationCompat.CATEGORY_CALL)
             .setOngoing(true)

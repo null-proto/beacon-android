@@ -2,7 +2,6 @@ package app.beacon.activities
 
 import android.content.Intent
 import android.os.Bundle
-import android.view.WindowInsetsController
 import android.view.WindowManager
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -10,14 +9,15 @@ import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.rounded.Call
 import androidx.compose.material.icons.rounded.CallEnd
-import androidx.compose.material.icons.rounded.Close
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.IconButtonColors
@@ -33,10 +33,11 @@ import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
 import app.beacon.services.Call
+import app.beacon.services.VoIPTX
 import app.beacon.state.CallLock
 import app.beacon.ui.theme.BeaconTheme
 
-class Call: ComponentActivity() {
+class VoIPTX: ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         setShowWhenLocked(true)
         setTurnScreenOn(true)
@@ -45,11 +46,10 @@ class Call: ComponentActivity() {
         CallLock.ongoingCall.value = true
         window.addFlags(
             WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON or
-            WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON or
-            WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD or
-            WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED
+                    WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON or
+                    WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD or
+                    WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED
         )
-
 
         WindowCompat.setDecorFitsSystemWindows(window,false)
         WindowInsetsControllerCompat(window,window.decorView).let { ctrlr ->
@@ -60,7 +60,7 @@ class Call: ComponentActivity() {
         val title = intent.getStringExtra("title")
         val name = intent.getStringExtra("name")
 
-        val ring = Intent(this , Call::class.java)
+        val ring = Intent(this , VoIPTX::class.java)
         ring.action = "STOP_CALL"
 
         CallLock.lock()
@@ -82,7 +82,7 @@ class Call: ComponentActivity() {
     @Preview @Composable private fun Phone(
         name : String? = null,
         title:String? = null,
-        onStop : ()->Unit ,
+        onStop : ()->Unit  = {},
     ) {
         Box(
             modifier = Modifier.fillMaxSize()
@@ -93,10 +93,10 @@ class Call: ComponentActivity() {
                     .fillMaxWidth(),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
+                Spacer( modifier = Modifier .padding(top = 200.dp), )
+                if (!CallLock.ongoingCall.value) Text("waiting")
                 Text(
-                    title ?: "Ping",
-                    modifier = Modifier
-                        .padding(top = 200.dp),
+                    title ?: "Anonymous",
                     fontSize = 32.sp,
                     color = MaterialTheme.colorScheme.onBackground
                 )
@@ -111,26 +111,32 @@ class Call: ComponentActivity() {
                 modifier = Modifier
                     .fillMaxWidth()
                     .align(Alignment.BottomCenter),
-                horizontalAlignment = Alignment.CenterHorizontally
+                horizontalAlignment = Alignment.CenterHorizontally,
             ) {
-                IconButton(
-                    onClick = onStop,
-                    colors = IconButtonColors(
-                        containerColor = MaterialTheme.colorScheme.primary,
-                        contentColor = MaterialTheme.colorScheme.onPrimary,
-                        disabledContainerColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.5f),
-                        disabledContentColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.5f),
-                    ),
-                    modifier = Modifier.size(68.dp)
-                ) {
-                    Icon(Icons.Rounded.Close, contentDescription = null)
-                }
-
+                PreCallButtons(onStop)
                 Spacer(
                     modifier = Modifier.padding(42.dp)
                 )
             }
 
+        }
+    }
+
+    @Preview
+    @Composable fun PreCallButtons(onStop: () -> Unit = {} ) {
+        Row {
+            IconButton(
+                onClick = onStop,
+                colors = IconButtonColors(
+                    containerColor = MaterialTheme.colorScheme.error,
+                    contentColor = MaterialTheme.colorScheme.onError,
+                    disabledContainerColor = MaterialTheme.colorScheme.error.copy(alpha = 0.5f),
+                    disabledContentColor = MaterialTheme.colorScheme.onError.copy(alpha = 0.5f),
+                ),
+                modifier = Modifier.size(68.dp)
+            ) {
+                Icon(Icons.Rounded.CallEnd, contentDescription = null)
+            }
         }
     }
 }

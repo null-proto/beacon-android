@@ -2,22 +2,23 @@ package app.beacon.activities
 
 import android.content.Intent
 import android.os.Bundle
-import android.view.WindowInsetsController
 import android.view.WindowManager
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.rounded.Call
 import androidx.compose.material.icons.rounded.CallEnd
-import androidx.compose.material.icons.rounded.Close
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.IconButtonColors
@@ -33,10 +34,11 @@ import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
 import app.beacon.services.Call
+import app.beacon.services.VoIPRX
 import app.beacon.state.CallLock
 import app.beacon.ui.theme.BeaconTheme
 
-class Call: ComponentActivity() {
+class VoIPRX: ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         setShowWhenLocked(true)
         setTurnScreenOn(true)
@@ -45,11 +47,10 @@ class Call: ComponentActivity() {
         CallLock.ongoingCall.value = true
         window.addFlags(
             WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON or
-            WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON or
-            WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD or
-            WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED
+                    WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON or
+                    WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD or
+                    WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED
         )
-
 
         WindowCompat.setDecorFitsSystemWindows(window,false)
         WindowInsetsControllerCompat(window,window.decorView).let { ctrlr ->
@@ -60,7 +61,7 @@ class Call: ComponentActivity() {
         val title = intent.getStringExtra("title")
         val name = intent.getStringExtra("name")
 
-        val ring = Intent(this , Call::class.java)
+        val ring = Intent(this , VoIPRX::class.java)
         ring.action = "STOP_CALL"
 
         CallLock.lock()
@@ -82,7 +83,8 @@ class Call: ComponentActivity() {
     @Preview @Composable private fun Phone(
         name : String? = null,
         title:String? = null,
-        onStop : ()->Unit ,
+        onAttend: () -> Unit = {},
+        onStop : ()->Unit  = {},
     ) {
         Box(
             modifier = Modifier.fillMaxSize()
@@ -94,7 +96,7 @@ class Call: ComponentActivity() {
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Text(
-                    title ?: "Ping",
+                    title ?: "Anonymous",
                     modifier = Modifier
                         .padding(top = 200.dp),
                     fontSize = 32.sp,
@@ -111,26 +113,48 @@ class Call: ComponentActivity() {
                 modifier = Modifier
                     .fillMaxWidth()
                     .align(Alignment.BottomCenter),
-                horizontalAlignment = Alignment.CenterHorizontally
+                horizontalAlignment = Alignment.CenterHorizontally,
             ) {
-                IconButton(
-                    onClick = onStop,
-                    colors = IconButtonColors(
-                        containerColor = MaterialTheme.colorScheme.primary,
-                        contentColor = MaterialTheme.colorScheme.onPrimary,
-                        disabledContainerColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.5f),
-                        disabledContentColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.5f),
-                    ),
-                    modifier = Modifier.size(68.dp)
-                ) {
-                    Icon(Icons.Rounded.Close, contentDescription = null)
-                }
-
+                PreCallButtons(onStop, onAttend)
                 Spacer(
                     modifier = Modifier.padding(42.dp)
                 )
             }
 
+        }
+    }
+
+    @Preview
+    @Composable fun PreCallButtons( onAttend: () -> Unit = {}, onStop: () -> Unit = {} ) {
+        Row {
+            if (!CallLock.ongoingCall.value) {
+                IconButton(
+                    onClick = onAttend,
+                    colors = IconButtonColors(
+                        containerColor = MaterialTheme.colorScheme.tertiary,
+                        contentColor = MaterialTheme.colorScheme.onTertiary,
+                        disabledContainerColor = MaterialTheme.colorScheme.tertiary.copy(alpha = 0.5f),
+                        disabledContentColor = MaterialTheme.colorScheme.onTertiary.copy(alpha = 0.5f),
+                    ),
+                    modifier = Modifier.size(68.dp)
+                ) {
+                    Icon(Icons.Rounded.Call, contentDescription = null)
+                }
+                Spacer(modifier = Modifier.padding(horizontal = 58.dp))
+            }
+
+            IconButton(
+                onClick = onStop,
+                colors = IconButtonColors(
+                    containerColor = MaterialTheme.colorScheme.error,
+                    contentColor = MaterialTheme.colorScheme.onError,
+                    disabledContainerColor = MaterialTheme.colorScheme.error.copy(alpha = 0.5f),
+                    disabledContentColor = MaterialTheme.colorScheme.onError.copy(alpha = 0.5f),
+                ),
+                modifier = Modifier.size(68.dp)
+            ) {
+                Icon(Icons.Rounded.CallEnd, contentDescription = null)
+            }
         }
     }
 }

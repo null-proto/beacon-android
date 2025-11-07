@@ -77,6 +77,7 @@ data object Globals {
             const val ID = "ping"
             const val NAME = "Ping"
         }
+
         object CallChannel {
             const val CATEGORY = "call"
             const val ID = "call"

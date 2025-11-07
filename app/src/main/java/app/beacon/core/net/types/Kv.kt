@@ -79,4 +79,11 @@ class Kv( private var data : UByteArray  = ubyteArrayOf() ) : Serde<Kv> {
     override fun deserialize(data: UByteArray): Kv {
         return Kv(data)
     }
+
+    companion object {
+        // Common Keys
+        const val ROUTE: String = "route";
+        const val CODE: String = "returns";
+        const val MESSAGE: String = "msg";
+    }
 }

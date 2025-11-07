@@ -1,5 +1,7 @@
 package app.beacon.core.net.types
 
+import android.util.Log
+import androidx.compose.ui.platform.LocalGraphicsContext
 import app.beacon.core.Serde
 
 @OptIn(ExperimentalUnsignedTypes::class)
@@ -21,8 +23,8 @@ class Kv( private var data : UByteArray  = ubyteArrayOf() ) : Serde<Kv> {
         }
         val keySerialized = key.encodeToByteArray().toUByteArray()
         val valueSerialized = value.encodeToByteArray().toUByteArray()
-        data += ubyteArrayOf(keySerialized.size.toUByte()) + keySerialized
-        data += ubyteArrayOf(valueSerialized.size.toUByte()) + valueSerialized
+        data += ubyteArrayOf(keySerialized.size.toUByte() , (keySerialized.size shr 8).toUByte()) + keySerialized
+        data += ubyteArrayOf(valueSerialized.size.toUByte(),(valueSerialized.size shr 8).toUByte() ) + valueSerialized
     }
 
     fun get(key: String) : String? {
@@ -31,27 +33,18 @@ class Kv( private var data : UByteArray  = ubyteArrayOf() ) : Serde<Kv> {
         val keyByte = key.encodeToByteArray().toUByteArray()
 
         while (data.size > cur) {
-            cur += data[cur].toInt()+1 // [0]=3+1=4,
-            if (cur-pre-1 == keyByte.size) {
-                val target = data.sliceArray(
-                    (pre+1)..<cur
-                )
-
+            cur += ((data[cur].toInt() or (data[cur+1].toInt() shl 8) )) +2
+            if (cur-pre-2 == keyByte.size) {
+                val target = data.sliceArray( (pre+2)..<cur )
                 pre = cur
-                cur += data[pre].toInt()+1
-
+                cur += (data[pre].toInt() or (data[pre+1].toInt() shl 8))+2
                 if (target.contentEquals(keyByte)) {
-                    return String(
-                        data.sliceArray(
-                            (pre+1)..<cur
-                        ).asByteArray()
-                    )
+                    return String( data.sliceArray( (pre+2)..<cur ).asByteArray() )
                 }
-
             } else {
-                cur += data[cur].toInt()+1 // [4]=4+1+(4)=9,
+                cur += (data[cur].toInt() or (data[cur+1].toInt() shl 8) )+2
             }
-            pre = cur // 9+1=10,
+            pre = cur
         }
         return null
     }
@@ -61,11 +54,10 @@ class Kv( private var data : UByteArray  = ubyteArrayOf() ) : Serde<Kv> {
         var pre = 0
         val list = mutableListOf<String>()
 
-
         while(data.size > cur) {
-            cur += data[cur].toInt()+1
-            list += String(data.sliceArray(pre+1..<cur).asByteArray())
-            cur += data[cur].toInt()+1
+            cur += (data[cur].toInt() or (data[cur+1].toInt() shl 8) )+2
+            list += String(data.sliceArray(pre+2..<cur).asByteArray())
+            cur += (data[cur].toInt() or (data[cur+1].toInt() shl 8) )+2
             pre = cur
         }
 
@@ -78,12 +70,5 @@ class Kv( private var data : UByteArray  = ubyteArrayOf() ) : Serde<Kv> {
 
     override fun deserialize(data: UByteArray): Kv {
         return Kv(data)
-    }
-
-    companion object {
-        // Common Keys
-        const val ROUTE: String = "route";
-        const val CODE: String = "returns";
-        const val MESSAGE: String = "msg";
     }
 }

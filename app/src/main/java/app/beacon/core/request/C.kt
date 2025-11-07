@@ -2,6 +2,7 @@ package app.beacon.core.request
 
 object C {
     // Routeing
+    const val ROUTE = "route"
     const val CALL_RECEIVER = "call.rx"
     const val RING = "mk.ring"
     const val NOTIFY = "mk.notify"

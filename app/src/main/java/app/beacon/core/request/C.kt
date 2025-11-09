@@ -6,6 +6,7 @@ object C {
     const val CALL_RECEIVER = "call.rx"
     const val RING = "mk.ring"
     const val NOTIFY = "mk.notify"
+    const val INFO = "info"
     const val NOT_FOUND = "not.fnd"
 
 

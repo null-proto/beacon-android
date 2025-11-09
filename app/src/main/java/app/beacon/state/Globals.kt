@@ -3,6 +3,7 @@
 package app.beacon.state
 
 import android.content.Context
+import android.os.Build
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
 
@@ -25,7 +26,10 @@ data object Globals {
     }
 
     data class Inf (
-        val uuid: Uuid
+        val uuid: Uuid,
+        val vendor : String = Build.MANUFACTURER,
+        val os : String = Build.MODEL,
+        val osVersion : String = Build.VERSION.RELEASE,
     )
 
     fun setup(context: Context) {

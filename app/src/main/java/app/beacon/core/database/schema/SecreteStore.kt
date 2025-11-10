@@ -19,27 +19,11 @@ import app.beacon.core.net.types.Kv
             onDelete = ForeignKey.CASCADE
         )
     ],
-    indices = [Index("uuid")]
+    indices = [Index("uuid" , unique = true)]
 )
 data class SecreteStore(
     val uuid: String,
     @PrimaryKey(autoGenerate = true)
     val secID : Int,
     val longTermSecrete: String,
-): Serde<SecreteStore> {
-    override fun serialize(): UByteArray {
-        return Kv().apply {
-            put("uuid" , uuid)
-            put("long-term-sec" , longTermSecrete)
-        }.serialize()
-    }
-
-    override fun deserialize(data: UByteArray): SecreteStore? {
-        val pb = Kv(data)
-        return SecreteStore(
-            uuid = pb.get("uuid") ?: return null,
-            secID = pb.get("id")?.toInt() ?: return null,
-            longTermSecrete = pb.get("long-term-sec") ?: return null,
-        )
-    }
-}
+)

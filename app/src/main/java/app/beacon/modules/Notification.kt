@@ -32,14 +32,14 @@ object Notification: Module {
             )
                 .setSmallIcon(R.drawable.ic_launcher_foreground)
                 .setContentTitle(args.ip.toString())
-                .setContentText(args.kv?.get(C.MESSAGE) ?: "Ping")
+                .setContentText(args.kv.get(C.MESSAGE) ?: "Ping")
                 .setPriority(NotificationCompat.PRIORITY_DEFAULT)
                 .setCategory(NotificationCompat.CATEGORY_MESSAGE)
                 .setGroup(Globals.Notification.OpenChannel.CATEGORY)
                 .build()
 
             NotificationManagerCompat.from(args.state.context)
-                .notify(args.kv?.get("id")?.toInt() ?: args.ip.hashCode(), notification)
+                .notify(args.kv.get("id")?.toInt() ?: args.ip.hashCode(), notification)
 
             return Module.Result.ok()
         } else {

@@ -29,7 +29,7 @@ object CallReceiver: Module {
                 CallLock.initiate = true
                 val intent = Intent(args.state.context, VoIPRX::class.java).apply {
                     putExtra("title", args.ip.hostName)
-                    putExtra("name", args.kv?.get(C.MESSAGE))
+                    putExtra("name", args.kv.get(C.MESSAGE))
                 }
                 ContextCompat.startForegroundService(args.state.context, intent)
 

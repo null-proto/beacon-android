@@ -40,7 +40,7 @@ object Ring : Module {
                 CallLock.initiate = true
                 val intent = Intent(args.state.context, Call::class.java).apply {
                     putExtra("title", args.ip.hostName)
-                    putExtra("name", args.kv?.get(C.MESSAGE))
+                    putExtra("name", args.kv.get(C.MESSAGE))
                 }
                 ContextCompat.startForegroundService(args.state.context, intent)
                 Log.d("Ring", "reached foreground service started")

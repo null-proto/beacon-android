@@ -9,11 +9,11 @@ import app.beacon.core.routes.Module
 object NotFound : Module {
     override val name = C.NOT_FOUND
     override suspend fun work(args: Args): Module.Result {
-        Log.w("NotFound" , "Requested module not found ${args.ip.hostName}-> ${args.kv?.get("route")} ")
+        Log.w("NotFound" , "Requested module not found ${args.ip.hostName}-> ${args.kv.get("route")} ")
 
-        Log.i("NotFound" , "${args.kv?.serialize()?.map { it.toUByte() }}")
+        Log.i("NotFound" , "${args.kv.serialize().map { it.toUByte() }}")
 
-        args.kv?.keys()?.forEachIndexed { x, i->
+        args.kv.keys().forEachIndexed { x, i->
             Log.d("NotFound" , "x -> $i:${args.kv.get(i)}")
         }
 

@@ -48,8 +48,9 @@ class Session(val context: Context , val rt : CoroutineScope) {
 
     suspend fun attach(frame: Frame , ip : InetAddress , port : Int , localIp : InetAddress , localPort : Int) : Frame? {
         val kv = frame.getKv()
+        val sts = frame.header.secret
         return if (kv!=null)
-            router.route(Args(state , kv = kv , ip = ip , port = port , localIp = localIp , localPort = localPort))
+            router.route(Args(state , kv = kv , ip = ip , port = port , localIp = localIp , localPort = localPort,sts = sts))
         else {
             Log.w("Session", "failed to route")
             null

@@ -1,9 +1,11 @@
 package app.beacon.core.net.types
 
+import app.beacon.core.Serde
+
 @OptIn(ExperimentalUnsignedTypes::class)
 data class Bin(
     val data : ByteArray
-) {
+) : Serde<Bin> {
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (javaClass != other?.javaClass) return false
@@ -15,6 +17,14 @@ data class Bin(
 
     override fun hashCode(): Int {
         return data.contentHashCode()
+    }
+
+    override fun deserialize(data: UByteArray): Bin? {
+        return Bin(data = data.map { it.toByte() }.toByteArray())
+    }
+
+    override fun serialize(): UByteArray {
+        return data.map { it.toUByte() }.toUByteArray()
     }
 
     companion object Static {

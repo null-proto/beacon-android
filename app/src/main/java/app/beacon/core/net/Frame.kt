@@ -41,6 +41,17 @@ data class Frame(
             )
         }
 
+        fun from(data: Bin): Frame {
+            val data = data.data
+            return Frame(
+                header = Header(
+                    size = data.size.toUInt(),
+                    type = 2u,
+                ),
+                data = data.map { it.toByte() }.toByteArray()
+            )
+        }
+
         fun from(data: Kv): Frame {
             val data = data.serialize()
             return Frame(

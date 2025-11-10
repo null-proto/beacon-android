@@ -7,23 +7,28 @@ import androidx.room.Insert
 import androidx.room.Query
 import androidx.room.Update
 import app.beacon.core.database.schema.DevInfo
+import app.beacon.core.database.schema.SecreteStore
 
 @Dao
 interface Registry {
     @Insert
-    suspend fun addToReg(dev : DevInfo)
+    suspend fun insert(dev : DevInfo)
+
+    @Insert
+    suspend fun insert(sec : SecreteStore)
 
     @Update
     suspend fun updateToReg(dev: DevInfo)
 
     @Delete
-    suspend fun dropToReg(dev: DevInfo)
+    suspend fun delete(dev: DevInfo)
 
     @Query("SELECT * FROM `main_table`")
-    fun getAllReg() : LiveData<List<DevInfo>>
-
+    fun selectAllFromMainTable() : LiveData<List<DevInfo>>
 
     @Query("SELECT * FROM `main_table` WHERE uuid = :uuid LIMIT 1")
     fun getReg(uuid: String) : LiveData<DevInfo?>
 
+    @Query("SELECT EXISTS(SELECT uuid,lts FROM `secrete_store` WHERE uuid = :uuid AND lts = :lts)")
+    fun checkLongTermSecrete(uuid: String , lts : String) : Boolean
 }

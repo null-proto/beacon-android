@@ -9,6 +9,9 @@ object C {
     const val INFO = "info"
     const val NOT_FOUND = "not.fnd"
 
+    const val M_AUTH = ".auth"
+    const val M_PAIR = ".pair"
+
 
     // connection mata data
     const val ID = "id"

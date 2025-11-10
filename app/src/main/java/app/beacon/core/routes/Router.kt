@@ -4,8 +4,7 @@ import app.beacon.core.net.Frame
 import app.beacon.core.net.types.Kv
 import app.beacon.core.request.C
 import app.beacon.modules.*
-import app.beacon.modules.open.Auth
-import app.beacon.modules.open.Info
+import app.beacon.modules.open.*
 import app.beacon.state.SecreteStore
 
 @OptIn(ExperimentalUnsignedTypes::class)
@@ -26,12 +25,14 @@ class Router {
                     Ring.name -> Ring
                     Info.name -> Info
                     Auth.name -> Auth
+                    Pair.name -> Pair
+
                     else -> NotFound
                 }.work(args).asFrame()
             } else {
                 Frame.from(
                     Kv().apply {
-                        put("error" , "secrete")
+                        put(C.ERROR , "secrete")
                         put(C.CODE , "4")
                     }
                 )

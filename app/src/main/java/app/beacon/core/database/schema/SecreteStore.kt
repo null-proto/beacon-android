@@ -1,5 +1,6 @@
 package app.beacon.core.database.schema
 
+import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.Index
@@ -24,6 +25,7 @@ import app.beacon.core.net.types.Kv
 data class SecreteStore(
     val uuid: String,
     @PrimaryKey(autoGenerate = true)
-    val secID : Int,
+    val secID : Int? = null,
+    @ColumnInfo( name = "lts" )
     val longTermSecrete: String,
 )

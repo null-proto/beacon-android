@@ -10,6 +10,7 @@ import kotlin.uuid.Uuid
 object SecreteStore {
     private val store = hashMapOf<UInt , String>()
     private val _ip = hashMapOf<UInt , InetAddress>()
+    private val _ip2 = hashMapOf<InetAddress, UInt>()
     private val rand = Random((0..99999).random())
 
     operator fun get(sts: UInt) : String? {
@@ -24,6 +25,10 @@ object SecreteStore {
         return _ip.get(sts)
     }
 
+    fun getIp(ip : InetAddress) : UInt? {
+        return _ip2.get(ip)
+    }
+
     fun setIp(sts : UInt, ip : InetAddress) {
         _ip.put(sts , ip)
     }
@@ -32,6 +37,7 @@ object SecreteStore {
         val sts = rand.nextUInt()
         store.put(sts , uuid)
         _ip.put(sts , ip)
+        _ip2.put(ip , sts)
         return sts
     }
 

@@ -14,7 +14,8 @@ data class Frame(
 
     data class Header(
         val size: UInt,
-        val type: UInt
+        val type: UInt,
+        val secret : UInt = 0u,
     ) {
         companion object {
             fun parse(data : UByteArray) : Header {
@@ -22,73 +23,70 @@ data class Frame(
                     ((data[3].toUInt() shl 24) or (data[2].toUInt() shl 16) or (data[1].toUInt() shl 8) or (data[0].toUInt()))
                 val type =
                     ((data[7].toUInt() shl 24) or (data[6].toUInt() shl 16) or (data[5].toUInt() shl 8) or (data[4].toUInt()))
+
+                val secret = ((data[11].toUInt() shl 24) or (data[10].toUInt() shl 16) or (data[9].toUInt() shl 8) or (data[8].toUInt()))
                 return Header(
                     size = size,
-                    type = type
+                    type = type,
+                    secret = secret
                 )
             }
         }
     }
 
     companion object {
-        fun from(data: UByteArray): Frame {
+        fun from(data: UByteArray , secret: UInt = 0u): Frame {
             return Frame(
                 header = Header(
                     size = data.size.toUInt(),
                     type = 1u,
+                    secret = secret
                 ),
                 data = data.map { it.toByte() }.toByteArray()
             )
         }
 
-        fun from(data: Bin): Frame {
+        fun from(data: Bin, secret: UInt = 0u): Frame {
             val data = data.data
             return Frame(
                 header = Header(
                     size = data.size.toUInt(),
                     type = 2u,
+                    secret= secret
                 ),
                 data = data.map { it.toByte() }.toByteArray()
             )
         }
 
-        fun from(data: Kv): Frame {
+        fun from(data: Kv , secret: UInt = 0u): Frame {
             val data = data.serialize()
             return Frame(
                 header = Header(
                     size = data.size.toUInt(),
                     type = 2u,
+                    secret = secret
                 ),
                 data = data.map { it.toByte() }.toByteArray()
             )
         }
 
-        fun from(data: ByteArray , i2u : Boolean = false): Frame {
+        fun from(data: ByteArray , i2u : Boolean = false , secret: UInt = 0u): Frame {
             return Frame(
                 header = Header(
                     size = data.size.toUInt(),
                     type = 1u,
+                    secret = secret
                 ),
                 data =  if (i2u) data.map { it.toByte() }.toByteArray() else data
             )
         }
 
-        fun from(): Frame {
+        fun from(secret: UInt = 0u): Frame {
             return Frame(
                 header = Header(
                     size = 0u,
                     type = 0u,
-                ),
-                data = byteArrayOf()
-            )
-        }
-
-
-        fun empty(): Frame {
-            return Frame(
-                header = Header(
-                    size = 0u,
-                    type = 0u,
+                    secret = secret
                 ),
                 data = byteArrayOf()
             )

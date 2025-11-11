@@ -112,6 +112,10 @@
             android:foregroundServiceType="phoneCall|mediaPlayback|microphone"
             />
 
+        <service android:name=".services.Pairing"
+            android:exported="false"
+            android:foregroundServiceType="dataSync"
+            />
 
         <receiver android:name=".services.Broadcasts"
             android:exported="true">

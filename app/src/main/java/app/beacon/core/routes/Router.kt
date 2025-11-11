@@ -14,6 +14,7 @@ class Router {
             when (args.kv.get(C.ROUTE)) {
                 Auth.name -> Auth
                 Info.name -> Info
+                Pair.name -> Pair
 
                 else -> NotFound
             }.work(args).asFrame()

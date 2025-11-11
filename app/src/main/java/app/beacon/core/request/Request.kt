@@ -37,9 +37,13 @@ class Request(address: InetAddress, port: Int) {
         try {
             val fm = socket.inputStream.readNBytes(8).map { it.toUByte() }.toUByteArray()
             val header = Frame.Header.parse(fm)
-            val data = socket.inputStream.readNBytes(header.size.toInt())
-            return Frame(header = header, data = data)
-        } catch (e : SocketTimeoutException) {
+            return if (header != null) {
+                val data = socket.inputStream.readNBytes(header.size.toInt())
+                Frame(header = header, data = data)
+            } else {
+                null
+            }
+        } catch (e: SocketTimeoutException) {
             return null
         }
     }

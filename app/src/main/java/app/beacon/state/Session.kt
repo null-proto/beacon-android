@@ -72,12 +72,12 @@ class Session(val context: Context , val rt : CoroutineScope) {
                         while (!client.isClosed) {
                             val fm =
                                 client.inputStream.readNBytes(12).map { it.toUByte() }.toUByteArray()
-                            val header = Frame.Header.parse(fm)
-                            val data = client.inputStream.readNBytes(header.size.toInt())
-                            val frame = Frame(header = header, data = data)
-
-                            val res = attach(frame ,ip , port , localIp , localPort)
-                            if (res!=null) client.outputStream.write(res.serialize())
+                            Frame.Header.parse(fm)?.let { header ->
+                                val data = client.inputStream.readNBytes(header.size.toInt())
+                                val frame = Frame(header = header, data = data)
+                                val res = attach(frame, ip, port, localIp, localPort)
+                                if (res != null) client.outputStream.write(res.serialize())
+                            }
                         }
 
                     } catch (e : SocketException) {

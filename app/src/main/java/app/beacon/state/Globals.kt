@@ -26,7 +26,7 @@ data object Globals {
     }
 
     data class Inf (
-        val uuid: Uuid,
+        val uuid: String,
         val vendor : String = Build.MANUFACTURER,
         val os : String = Build.MODEL,
         val osVersion : String = Build.VERSION.RELEASE,
@@ -51,9 +51,9 @@ data object Globals {
         val gUuid = preUuid.getString(PreferenceKeys.Self.UUID, null);
 
         if (gUuid == null) {
-            val gUuid = Uuid.random()
+            val gUuid = Uuid.random().toHexString()
             preUuid.edit().apply {
-                putString(PreferenceKeys.Self.UUID, gUuid.toString())
+                putString(PreferenceKeys.Self.UUID, gUuid)
                 commit()
             }
 
@@ -61,7 +61,7 @@ data object Globals {
 
         } else {
             return Inf(
-                uuid = Uuid.parse(gUuid)
+                uuid = gUuid
             )
         }
 

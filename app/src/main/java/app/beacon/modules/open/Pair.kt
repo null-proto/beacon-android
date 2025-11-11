@@ -27,10 +27,11 @@ object Pair : Module {
             ))
             PairNg.code.put(id , args.ip)
 
-            args.state.registry.insert(SecreteStore(
-                uuid = uuid,
-                longTermSecrete = lts
-            ))
+
+//            args.state.registry.insert(SecreteStore(
+//                uuid = uuid,
+//                longTermSecrete = lts
+//            ))
             return Module.Result.ok()
         } else {
             return Module.Result.error(code = 1)

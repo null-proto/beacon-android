@@ -19,7 +19,9 @@ data class Frame(
         val secret : UInt = 0u,
     ) {
         companion object {
-            fun parse(data: UByteArray): Header {
+            fun parse(data: UByteArray): Header? {
+                if (data.size<12) return null
+
                 val size =
                     (data[0].toUInt() or (data[1].toUInt() shl 8) or (data[2].toUInt() shl 16) or (data[3].toUInt() shl 24))
 

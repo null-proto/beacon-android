@@ -71,7 +71,7 @@ class Session(val context: Context , val rt : CoroutineScope) {
                         val localIp = client.localAddress
                         while (!client.isClosed) {
                             val fm =
-                                client.inputStream.readNBytes(8).map { it.toUByte() }.toUByteArray()
+                                client.inputStream.readNBytes(12).map { it.toUByte() }.toUByteArray()
                             val header = Frame.Header.parse(fm)
                             val data = client.inputStream.readNBytes(header.size.toInt())
                             val frame = Frame(header = header, data = data)

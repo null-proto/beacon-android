@@ -20,11 +20,14 @@ data class Frame(
         companion object {
             fun parse(data : UByteArray) : Header {
                 val size =
-                    ((data[3].toUInt() shl 24) or (data[2].toUInt() shl 16) or (data[1].toUInt() shl 8) or (data[0].toUInt()))
-                val type =
-                    ((data[7].toUInt() shl 24) or (data[6].toUInt() shl 16) or (data[5].toUInt() shl 8) or (data[4].toUInt()))
+                    (data[0].toUInt() or (data[1].toUInt() shl 8) or (data[2].toUInt() shl 16) or (data[3].toUInt() shl 24))
 
-                val secret = ((data[11].toUInt() shl 24) or (data[10].toUInt() shl 16) or (data[9].toUInt() shl 8) or (data[8].toUInt()))
+                val type =
+                    (data[4].toUInt() or (data[5].toUInt() shl 8) or (data[6].toUInt() shl 16) or (data[7].toUInt() shl 24))
+
+                val secret =
+                    (data[8].toUInt() or (data[9].toUInt() shl 8) or (data[10].toUInt() shl 16) or (data[11].toUInt() shl 24))
+
                 return Header(
                     size = size,
                     type = type,
@@ -32,9 +35,7 @@ data class Frame(
                 )
             }
         }
-    }
 
-    companion object {
         fun from(data: UByteArray , secret: UInt = 0u): Frame {
             return Frame(
                 header = Header(
@@ -111,10 +112,12 @@ data class Frame(
             ((header.size shr 8) and 0xFFu).toByte(),
             ((header.size shr 16)and 0xFFu).toByte(),
             ((header.size shr 24)and 0xFFu).toByte(),
+
             (header.type and 0xFFu).toByte(),
             ((header.type shr 8) and 0xFFu).toByte(),
             ((header.type shr 16) and 0xFFu).toByte(),
             ((header.type shr 24) and 0xFFu).toByte(),
+
             (header.secret and 0xFFu).toByte(),
             ((header.secret shr 8) and 0xFFu).toByte(),
             ((header.secret shr 16) and 0xFFu).toByte(),

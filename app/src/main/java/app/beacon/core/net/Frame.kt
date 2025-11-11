@@ -114,7 +114,11 @@ data class Frame(
             (header.type and 0xFFu).toByte(),
             ((header.type shr 8) and 0xFFu).toByte(),
             ((header.type shr 16) and 0xFFu).toByte(),
-            ((header.type shr 24) and 0xFFu).toByte()
+            ((header.type shr 24) and 0xFFu).toByte(),
+            (header.secret and 0xFFu).toByte(),
+            ((header.secret shr 8) and 0xFFu).toByte(),
+            ((header.secret shr 16) and 0xFFu).toByte(),
+            ((header.secret shr 24) and 0xFFu).toByte()
         ) + data
     }
 
@@ -126,6 +130,7 @@ data class Frame(
 
         if (header.size != other.header.size) return false
         if (header.type != other.header.type) return false
+        if (header.secret != other.header.secret) return false
         if (!data.contentEquals(other.data)) return false
 
         return true
@@ -134,6 +139,7 @@ data class Frame(
     override fun hashCode(): Int {
         var result = header.size.hashCode()
         result = 31 * result + header.type.hashCode()
+        result = 31 * result + header.secret.hashCode()
         result = 31 * result + data.contentHashCode()
         return result
     }

@@ -12,6 +12,7 @@ data class Frame(
     val data: ByteArray,
 ) {
 
+    // -- header --
     data class Header(
         val size: UInt,
         val type: UInt,
@@ -37,6 +38,31 @@ data class Frame(
         }
     }
 
+
+
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (javaClass != other?.javaClass) return false
+
+        other as Frame
+
+        if (header.size != other.header.size) return false
+        if (header.type != other.header.type) return false
+        if (header.secret != other.header.secret) return false
+        if (!data.contentEquals(other.data)) return false
+
+        return true
+    }
+
+    override fun hashCode(): Int {
+        var result = header.size.hashCode()
+        result = 31 * result + header.type.hashCode()
+        result = 31 * result + header.secret.hashCode()
+        result = 31 * result + data.contentHashCode()
+        return result
+    }
+
+    // -- Frame --
     companion object {
         fun from(data: UByteArray , secret: UInt = 0u): Frame {
             return Frame(
@@ -125,27 +151,5 @@ data class Frame(
             ((header.secret shr 16) and 0xFFu).toByte(),
             ((header.secret shr 24) and 0xFFu).toByte()
         ) + data
-    }
-
-    override fun equals(other: Any?): Boolean {
-        if (this === other) return true
-        if (javaClass != other?.javaClass) return false
-
-        other as Frame
-
-        if (header.size != other.header.size) return false
-        if (header.type != other.header.type) return false
-        if (header.secret != other.header.secret) return false
-        if (!data.contentEquals(other.data)) return false
-
-        return true
-    }
-
-    override fun hashCode(): Int {
-        var result = header.size.hashCode()
-        result = 31 * result + header.type.hashCode()
-        result = 31 * result + header.secret.hashCode()
-        result = 31 * result + data.contentHashCode()
-        return result
     }
 }

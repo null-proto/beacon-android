@@ -12,6 +12,12 @@ object C {
     const val M_AUTH = ".auth"
     const val M_PAIR = ".pair"
 
+    // module options
+    const val M_PAIR_MODE = ".pair:"
+    const val M_PAIR_MODE_1 = ".pair:1"
+    const val M_PAIR_MODE_2 = ".pair:2"
+    const val M_PAIR_MODE_3 = ".pair:3"
+
 
     // connection mata data
     const val ID = "id"
@@ -23,8 +29,8 @@ object C {
 
     // information exchange
     const val UUID = "uuid"
-    const val SECRETE = "short.sec"
-    const val LONG_TERM_SECRETE = "long.sec"
+    const val SECRETE = "sec.s"
+    const val LONG_TERM_SECRETE = "sec.l"
     const val INET_ADDRESS_4 = "ipv4-a"
     const val INET_ADDRESS_6 = "ipv6-a"
     const val CURRENT_INTERFACE = ".iface"

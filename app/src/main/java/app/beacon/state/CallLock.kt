@@ -5,17 +5,11 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 
 object CallLock: ViewModel() {
-    private var lock = false
+    var lock = false
+        private set
+
     var ongoingCall = mutableStateOf(false)
-    var initiated = false
-
-
-    val isLocked : Boolean
-        get() { return lock }
-
-    var initiate : Boolean
-        get() { return initiated }
-        set(value) { initiated = value }
+    var initiate = false
 
     fun lock(): Boolean {
         Log.d("CallLock" , "locking")
@@ -32,7 +26,7 @@ object CallLock: ViewModel() {
 
     fun unlock() {
         Log.d("CallLock" , "Unlocking")
-        initiated = false
+        initiate = false
         ongoingCall.value = false
         lock = false
     }
